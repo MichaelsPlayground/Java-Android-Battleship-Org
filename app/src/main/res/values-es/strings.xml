@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Barco de Batalla</string>
+    <string name="new_button_label">Nuevo</string>
+    <string name="new_title">Juevo Nuevo</string>
+    <string name="new_message">Estas seguro que quieres volver a empezar?</string>
+    <string name="num_shots">Numbero de Tiros:</string>
+    <string name="num_sunk_ships">Barcos Hundidos:</string>
+</resources>

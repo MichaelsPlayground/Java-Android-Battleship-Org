@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Battleship</string>
+    <string name="new_button_label">New</string>
+    <string name="new_title">Start Game</string>
+    <string name="new_message">Are you sure you want to restart?</string>
+    <string name="num_shots">Number of Shots:</string>
+    <string name="num_sunk_ships">Sunken Ships:</string>
+    <string name="menuitem_sound">Sound</string>
+</resources>
