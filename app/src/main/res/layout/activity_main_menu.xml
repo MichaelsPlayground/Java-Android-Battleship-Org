@@ -16,12 +16,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textMainMenu"
-        android:textSize="36sp"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textColor="@android:color/holo_red_dark"
+        android:textAllCaps="false"
+        android:textSize="45sp" />
 
     <View
         android:layout_width="match_parent"
-        android:background="@android:color/black"
+        android:background="@android:color/holo_red_dark"
         android:layout_height="1dp"
         android:layout_marginBottom="20dp" />
 
@@ -30,5 +32,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/btnPlayerSingle"
-        android:onClick="onClickSinglePlayer" />
+        android:onClick="onClickSinglePlayer"
+        android:textColor="@android:color/black" />
 </LinearLayout>

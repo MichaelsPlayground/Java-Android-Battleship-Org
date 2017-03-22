@@ -21,12 +21,13 @@ public class SpectatorBoardView extends BoardView {
 
     @Override
     public boolean isPlacePainted(Place p) {
+        invalidate();
         return p.isHit() || p.hasShip();
     }
 
     @Override
     public void onBoardTouch(int x, int y) {
-        // Don't hit or do anything
+        invalidate();
     }
 
     @Override
@@ -42,7 +43,8 @@ public class SpectatorBoardView extends BoardView {
 
         else
             paint.setColor(Color.MAGENTA);
-
+        
+        invalidate();
         return paint;
     }
 }

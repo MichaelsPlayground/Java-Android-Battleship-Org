@@ -125,6 +125,8 @@ public class GameActivity extends AppCompatActivity implements BattleshipGame.Ga
         boardDeployed.addBoardListener(new Board.BoardListener() {
             @Override
             public void onShipHit(Ship ship) {
+                boardViewRandom.invalidate();
+                boardViewDeployed.invalidate();
                 if (ship.isDestroyed()) {
                     playSound(Sound.Sink);
                     sunkShipsByCpu++;
@@ -136,6 +138,8 @@ public class GameActivity extends AppCompatActivity implements BattleshipGame.Ga
 
             @Override
             public void onShipMiss() {
+                boardViewRandom.invalidate();
+                boardViewDeployed.invalidate();
 
             }
         });
@@ -152,6 +156,9 @@ public class GameActivity extends AppCompatActivity implements BattleshipGame.Ga
         boardRandom.addBoardListener(new Board.BoardListener() {
             @Override
             public void onShipHit(Ship ship) {
+                boardViewRandom.invalidate();
+                boardViewDeployed.invalidate();
+
                 playSound(Sound.Hit);
 
                 if (ship.isDestroyed()) {
@@ -165,7 +172,8 @@ public class GameActivity extends AppCompatActivity implements BattleshipGame.Ga
 
             @Override
             public void onShipMiss() {
-
+                boardViewRandom.invalidate();
+                boardViewDeployed.invalidate();
             }
         });
         boardViewRandom.setBoard(boardRandom);
@@ -215,13 +223,15 @@ public class GameActivity extends AppCompatActivity implements BattleshipGame.Ga
             textCurrentPlayer.setText(getString(R.string.game_turn_ai));
             Vector2 simulatedPlay = currentPlayer.onOwnTurn();
             boardDeployed.hit(simulatedPlay);
-            boardViewDeployed.invalidate();
+
         } else {
             boardViewRandom.disableBoardTouch = false;
             textCurrentPlayer.setText(getString(R.string.game_turn_player));
         }
+        boardViewRandom.invalidate();
+        boardViewDeployed.invalidate();
     }
-    
+
     public void playSound(Sound sound) {
         if (!isSoundEnabled)
             return;

@@ -1,12 +1,9 @@
+// Author: Jose Perez <josegperez@mail.com> and Diego Reynoso
 package edu.utep.cs.cs4330.battleship.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * Created by xeroj on 021 3 21 2017.
- */
 
 public class BattleshipGame implements Serializable {
     public interface GameListener {

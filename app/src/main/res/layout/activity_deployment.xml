@@ -24,7 +24,8 @@
             android:id="@+id/textDepLabel"
             android:layout_weight="1"
             android:textAlignment="center"
-            android:textStyle="normal|bold|italic" />
+            android:textStyle="normal|bold|italic"
+            android:textColor="@color/colorPrimaryDark" />
 
         <TextView
             android:text="@string/main_menu_singleplayer_description"
@@ -33,7 +34,8 @@
             android:id="@+id/textDepGamemode"
             android:layout_weight="1"
             android:textAlignment="center"
-            android:textStyle="normal|italic" />
+            android:textStyle="normal|italic"
+            android:textColor="@color/colorAccent" />
     </LinearLayout>
 
     <View
@@ -60,7 +62,8 @@
                 android:id="@+id/textDepLabel2"
                 android:textAlignment="center"
                 android:textSize="18sp"
-                android:textStyle="normal|bold" />
+                android:textStyle="normal|bold"
+                android:textColor="@color/colorPrimaryDark" />
 
             <RadioGroup
                 android:layout_width="match_parent"
@@ -100,7 +103,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/textView2"
                 android:textSize="18sp"
-                android:textStyle="normal|bold" />
+                android:textStyle="normal|bold"
+                android:textColor="@color/colorPrimaryDark" />
 
             <Button
                 android:text="@string/deployment_reset"
@@ -130,7 +134,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textDeployStatus"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimaryDark" />
 
     <LinearLayout
         android:orientation="horizontal"
