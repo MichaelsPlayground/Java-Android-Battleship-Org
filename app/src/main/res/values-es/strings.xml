@@ -1,8 +1,30 @@
 <resources>
-    <string name="app_name">Barco de Batalla</string>
-    <string name="new_button_label">Nuevo</string>
-    <string name="new_title">Juevo Nuevo</string>
-    <string name="new_message">Estas seguro que quieres volver a empezar?</string>
-    <string name="num_shots">Numbero de Tiros:</string>
-    <string name="num_sunk_ships">Barcos Hundidos:</string>
+    <string name="app_name">Batalla Naval</string>
+    <string name="deployment_all_ships">Todos los barcos preparados!</string>
+    <string name="deployment_deploy">Batalla</string>
+    <string name="deployment_gamemode">Modo de Juego</string>
+    <string name="deployment_intent_board">Tablero</string>
+    <string name="deployment_intent_strategy">Estrategia</string>
+    <string name="deployment_options">Opciones de Preparacion</string>
+    <string name="deployment_rotation_mode">Modo de Rotacion</string>
+    <string name="deployment_reset">Volver a Empezar</string>
+    <string name="deployment_remaining_ships">Barcos restantes:</string>
+    <string name="deployment_strategy">Escoge Estrategia de Compu</string>
+    <string name="deployment_strategy_random">Al Azar</string>
+    <string name="deployment_strategy_sweep">Barrer</string>
+    <string name="game_exit_message">Quieres salir de el juego e ir al menu principal?</string>
+    <string name="game_exit_title">Confirmacion</string>
+    <string name="game_gameover_title">Fin de juego!</string>
+    <string name="game_lost">Perdiste!</string>
+    <string name="game_menu_sound">Sonido</string>
+    <string name="game_opponent_board">Tu oponente</string>
+    <string name="game_own_board">Tus barcos</string>
+    <string name="game_turn">Turno:</string>
+    <string name="game_turn_ai">Compu</string>
+    <string name="game_turn_player">Tuyo</string>
+    <string name="game_won">Ganaste!</string>
+    <string name="main_menu">Menu Principal</string>
+    <string name="main_menu_btn_single_player">Jugar Solo</string>
+    <string name="main_menu_intent_gamemode">Gamemode</string>
+    <string name="main_menu_singleplayer_description">vs Computadora</string>
 </resources>

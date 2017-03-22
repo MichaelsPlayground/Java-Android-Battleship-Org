@@ -13,8 +13,7 @@ class SweepStrategy extends Strategy {
         Vector2 pos = new Vector2(currentX, currentY);
         currentY++;
 
-        if(currentY >= board.size())
-        {
+        if (currentY >= board.size()) {
             currentY = 0;
             currentX++;
         }

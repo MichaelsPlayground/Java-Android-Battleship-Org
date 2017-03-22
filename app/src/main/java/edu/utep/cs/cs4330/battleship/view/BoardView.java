@@ -1,6 +1,4 @@
-/*
- * Author: Jose Perez <josegperez@mail.com>
- */
+// Author: Jose Perez <josegperez@mail.com> and Diego Reynoso
 package edu.utep.cs.cs4330.battleship.view;
 
 import android.content.Context;
@@ -27,11 +25,13 @@ public class BoardView extends View {
     private final int shipMissColor = Color.GREEN;
 
     private final Paint boardPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
     {
         boardPaint.setColor(boardColor);
     }
 
     private final Paint boardLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
     {
         boardLinePaint.setColor(boardLineColor);
         boardLinePaint.setStrokeWidth(2);
@@ -65,7 +65,7 @@ public class BoardView extends View {
         super(context, attrs, defStyleAttr);
     }
 
-    public Board getBoard(){
+    public Board getBoard() {
         return board;
     }
 
@@ -75,18 +75,19 @@ public class BoardView extends View {
     }
 
     public boolean disableBoardTouch = false;
-    public void onBoardTouch(int x, int y){
-        if(!disableBoardTouch) {
+
+    public void onBoardTouch(int x, int y) {
+        if (!disableBoardTouch) {
             board.hit(x, y);
         }
     }
 
-    public Paint getPlacePaint(Place p){
+    public Paint getPlacePaint(Place p) {
         Ship s = p.getShip();
         return s == null ? shipHitPaint : shipMissPaint;
     }
 
-    public boolean isPlacePainted(Place p){
+    public boolean isPlacePainted(Place p) {
         return p.isHit();
     }
 
@@ -119,13 +120,13 @@ public class BoardView extends View {
     }
 
     private void drawPlaces(Canvas canvas) {
-        if(board == null)
+        if (board == null)
             return;
 
-        for(int x = 0; x < board.size(); x++) {
+        for (int x = 0; x < board.size(); x++) {
             for (int y = 0; y < board.size(); y++) {
                 Place place = board.placeAt(x, y);
-                if(isPlacePainted(place)) {
+                if (isPlacePainted(place)) {
                     // Fill with paint
                     float left = x * lineGap(); // X1
                     float top = y * lineGap(); // Y1
@@ -144,7 +145,7 @@ public class BoardView extends View {
         canvas.drawRect(0, 0, maxCoord, maxCoord, boardPaint);
     }
 
-    private void drawGridLines(Canvas canvas){
+    private void drawGridLines(Canvas canvas) {
         final float maxCoord = maxCoord();
         final float placeSize = lineGap();
         for (int i = 0; i < numOfLines(); i++) {
@@ -154,15 +155,19 @@ public class BoardView extends View {
         }
     }
 
-    /** Calculate the gap between two horizontal/vertical lines. */
+    /**
+     * Calculate the gap between two horizontal/vertical lines.
+     */
     protected float lineGap() {
-        if(board == null)
+        if (board == null)
             return Math.min(getMeasuredHeight(), getMeasuredWidth());
 
         return (Math.min(getMeasuredWidth(), getMeasuredHeight()) / (float) board.size());
     }
 
-    /** Calculate the number of horizontal/vertical lines. */
+    /**
+     * Calculate the number of horizontal/vertical lines.
+     */
     private int numOfLines() {
         if (board == null)
             return 1;
@@ -170,7 +175,9 @@ public class BoardView extends View {
         return board.size() + 1;
     }
 
-    /** Calculate the maximum screen coordinate. */
+    /**
+     * Calculate the maximum screen coordinate.
+     */
     protected float maxCoord() {
         return lineGap() * (numOfLines() - 1);
     }
@@ -182,7 +189,7 @@ public class BoardView extends View {
      * The returned coordinates are encoded as <code>x*100 + y</code>.
      */
     private int locatePlace(float x, float y) {
-        if(board == null)
+        if (board == null)
             return -1;
 
         if (x <= maxCoord() && y <= maxCoord()) {

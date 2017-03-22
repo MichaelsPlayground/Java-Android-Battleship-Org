@@ -9,6 +9,7 @@ public class BattleshipGame implements Serializable {
     public interface GameListener {
         void onTurnChange(Player currentPlayer);
     }
+
     private final List<GameListener> listeners = new ArrayList<>();
 
     public void addGameListener(GameListener listener) {
@@ -25,7 +26,7 @@ public class BattleshipGame implements Serializable {
     private Player playerOpponent;
     private int currentTurn = 0;
 
-    public BattleshipGame(Player playerHuman, Player playerOpponent){
+    public BattleshipGame(Player playerHuman, Player playerOpponent) {
         this.playerHuman = playerHuman;
         this.playerOpponent = playerOpponent;
 
@@ -35,12 +36,10 @@ public class BattleshipGame implements Serializable {
                 // Ship was hit
                 // Player is not allowed multiple shots
                 // Change turns
-                if(!getCurrentPlayer().isAllowedMultipleShots)
+                if (!getCurrentPlayer().isAllowedMultipleShots)
                     nextTurn();
                 else // Player is allowed more shots so let them know
                     notifyTurnChange(getCurrentPlayer());
-
-
             }
 
             @Override
@@ -54,15 +53,15 @@ public class BattleshipGame implements Serializable {
         playerOpponent.board.addBoardListener(listener);
     }
 
-    private void nextTurn(){
+    private void nextTurn() {
         currentTurn++;
-        if(currentTurn > 1)
+        if (currentTurn > 1)
             currentTurn = 0;
 
         notifyTurnChange(getCurrentPlayer());
     }
 
-    private Player getCurrentPlayer(){
+    private Player getCurrentPlayer() {
         if (currentTurn == 0)
             return playerHuman;
         else

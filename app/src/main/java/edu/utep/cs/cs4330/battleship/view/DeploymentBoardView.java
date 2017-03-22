@@ -1,3 +1,4 @@
+// Author: Jose Perez <josegperez@mail.com> and Diego Reynoso
 package edu.utep.cs.cs4330.battleship.view;
 
 import android.content.Context;
@@ -12,10 +13,6 @@ import edu.utep.cs.cs4330.battleship.model.Direction;
 import edu.utep.cs.cs4330.battleship.model.Place;
 import edu.utep.cs.cs4330.battleship.model.Ship;
 import edu.utep.cs.cs4330.battleship.util.Vector2;
-
-/**
- * Created by xeroj on 021 3 21 2017.
- */
 
 public class DeploymentBoardView extends SpectatorBoardView {
 
@@ -45,6 +42,7 @@ public class DeploymentBoardView extends SpectatorBoardView {
         super(context, attrs);
         onCreate();
     }
+
     public DeploymentBoardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         onCreate();
@@ -55,7 +53,7 @@ public class DeploymentBoardView extends SpectatorBoardView {
 
     public boolean rotationMode = false;
 
-    public void onCreate(){
+    public void onCreate() {
         listShips = Ship.getShips();
 
         board = new Board(10);
@@ -63,7 +61,7 @@ public class DeploymentBoardView extends SpectatorBoardView {
     }
 
 
-    public int getRemainingShips(){
+    public int getRemainingShips() {
         return listShips.size();
     }
 
@@ -103,7 +101,7 @@ public class DeploymentBoardView extends SpectatorBoardView {
     @Override
     public Paint getPlacePaint(Place p) {
         Ship ship = p.getShip();
-        if(ship == null)
+        if (ship == null)
             return super.getPlacePaint(p);
         else {
             Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);

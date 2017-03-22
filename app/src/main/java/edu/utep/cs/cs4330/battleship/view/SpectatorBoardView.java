@@ -43,7 +43,7 @@ public class SpectatorBoardView extends BoardView {
 
         else
             paint.setColor(Color.MAGENTA);
-        
+
         invalidate();
         return paint;
     }

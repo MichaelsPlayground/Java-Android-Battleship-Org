@@ -1,8 +1,6 @@
 // Author: Jose Perez <josegperez@mail.com> and Diego Reynoso
 package edu.utep.cs.cs4330.battleship.model;
 
-import android.os.Parcelable;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 
@@ -20,9 +18,10 @@ import edu.utep.cs.cs4330.battleship.util.Vector2;
  * and y is a row index. A place of the board can be shot at, resulting
  * in either a hit or miss.
  */
-public class Board implements Serializable{
+public class Board implements Serializable {
     public interface BoardListener {
         void onShipHit(Ship ship);
+
         void onShipMiss();
     }
 
@@ -52,6 +51,7 @@ public class Board implements Serializable{
     /**
      * Create a new board of the given size.
      * Dimensions will be size * size
+     *
      * @param size Size of the board to create.
      */
     public Board(int size) {
@@ -69,7 +69,7 @@ public class Board implements Serializable{
     /**
      * Adds 5 predetermined random ships to this board
      */
-    public void addRandomShips(){
+    public void addRandomShips() {
         List<Ship> randomShips = Ship.getShips();
         while (randomShips.size() > 0) {
             Ship ship = randomShips.get(0);
@@ -96,15 +96,15 @@ public class Board implements Serializable{
         return size;
     }
 
-    public int getTotalShips(){
+    public int getTotalShips() {
         return boardShips.size();
     }
 
-    public boolean removeShip(Ship ship){
-        if(ship == null || ship.placesOwned.isEmpty())
+    public boolean removeShip(Ship ship) {
+        if (ship == null || ship.placesOwned.isEmpty())
             return false;
 
-        for (Vector2 pos : ship.placesOwned){
+        for (Vector2 pos : ship.placesOwned) {
             placeAt(pos).setShip(null);
             placeAt(pos).setHit(false);
         }
@@ -114,7 +114,7 @@ public class Board implements Serializable{
         return true;
     }
 
-    public boolean placeShip(Ship ship, Vector2 pos){
+    public boolean placeShip(Ship ship, Vector2 pos) {
         return placeShip(ship, pos.x, pos.y);
     }
 
@@ -146,7 +146,9 @@ public class Board implements Serializable{
         return true;
     }
 
-    public boolean hit(Vector2 pos) { return hit(pos.x, pos.y); }
+    public boolean hit(Vector2 pos) {
+        return hit(pos.x, pos.y);
+    }
 
     public boolean hit(int x, int y) {
         return hit(placeAt(x, y));
@@ -177,6 +179,7 @@ public class Board implements Serializable{
 
     /**
      * Determines if a specified position is valid
+     *
      * @param p Vector2 position to check
      * @return True if given position is valid
      */
@@ -190,17 +193,16 @@ public class Board implements Serializable{
         return isValidPlace(p.getPosition());
     }
 
-    public String toJSON(){
+    public String toJSON() {
         // Gson serializing
         // http://stackoverflow.com/questions/28391982/how-to-use-gson-to-serialize-objects-in-android
         return new Gson().toJson(this);
     }
 
-    public static Board fromJSON(String boardJSON){
+    public static Board fromJSON(String boardJSON) {
         try {
-            return (Board)new Gson().fromJson(boardJSON, Board.class);
-        }
-        catch(JsonParseException ex) {
+            return (Board) new Gson().fromJson(boardJSON, Board.class);
+        } catch (JsonParseException ex) {
             return null;
         }
     }
@@ -208,6 +210,7 @@ public class Board implements Serializable{
     /**
      * A String representation of the board
      * Can be used to cheat and see all the ships inside
+     *
      * @return String representation of board
      */
     public String boardToString() {

@@ -11,7 +11,7 @@ import edu.utep.cs.cs4330.battleship.util.Vector2;
 class RandomStrategy extends Strategy {
     private Random rand;
 
-    public RandomStrategy(){
+    public RandomStrategy() {
         rand = new Random(System.nanoTime());
     }
 
@@ -20,7 +20,7 @@ class RandomStrategy extends Strategy {
         return randomVector(board);
     }
 
-    public Vector2 randomVector(Board board){
+    public Vector2 randomVector(Board board) {
         int randomX = rand.nextInt(board.size());
         int randomY = rand.nextInt(board.size());
         Log.d("Debug", "AI Random: " + randomX);

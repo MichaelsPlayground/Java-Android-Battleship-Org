@@ -1,6 +1,4 @@
-/*
- * Author: Jose Perez <josegperez@mail.com>
- */
+// Author: Jose Perez <josegperez@mail.com> and Diego Reynoso
 package edu.utep.cs.cs4330.battleship.model;
 
 import android.graphics.Color;
@@ -13,7 +11,7 @@ import java.util.List;
 import edu.utep.cs.cs4330.battleship.util.Vector2;
 
 public class Ship implements Serializable {
-    public static List<Ship> getShips(){
+    public static List<Ship> getShips() {
         List<Ship> ships = new ArrayList<>();
         ships.add(new Ship("Aircraft Carrier", 5, Color.BLACK));
         ships.add(new Ship("Battleship", 4, Color.RED));
@@ -37,16 +35,16 @@ public class Ship implements Serializable {
         this.preferredColor = Color.GREEN;
 
         this.health = size;
-        placesOwned = new ArrayList<Vector2>();
+        placesOwned = new ArrayList<>();
     }
 
-    public Ship(String name, int size, int preferredColor){
+    public Ship(String name, int size, int preferredColor) {
         this(name, size);
         this.preferredColor = preferredColor;
     }
 
-    public void flipDirection(){
-        if(direction == Direction.Horizontal)
+    public void flipDirection() {
+        if (direction == Direction.Horizontal)
             direction = Direction.Vertical;
         else
             direction = Direction.Horizontal;

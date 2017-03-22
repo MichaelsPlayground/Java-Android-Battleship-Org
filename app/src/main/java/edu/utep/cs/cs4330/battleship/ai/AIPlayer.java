@@ -7,7 +7,8 @@ import edu.utep.cs.cs4330.battleship.util.Vector2;
 
 public class AIPlayer extends Player {
     private Strategy strategy;
-    public AIPlayer(Board board, boolean isAllowedMultipleHits, Strategy strategy){
+
+    public AIPlayer(Board board, boolean isAllowedMultipleHits, Strategy strategy) {
         super(board, isAllowedMultipleHits);
         this.strategy = strategy;
     }

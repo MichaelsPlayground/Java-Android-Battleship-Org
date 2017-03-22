@@ -1,12 +1,9 @@
+// Author: Jose Perez <josegperez@mail.com> and Diego Reynoso
 package edu.utep.cs.cs4330.battleship.model;
 
 import java.io.Serializable;
 
 import edu.utep.cs.cs4330.battleship.util.Vector2;
-
-/**
- * Created by xeroj on 021 3 21 2017.
- */
 
 public class Player implements Serializable {
     public Board board;

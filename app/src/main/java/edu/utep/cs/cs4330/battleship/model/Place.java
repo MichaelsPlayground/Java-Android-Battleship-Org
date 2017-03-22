@@ -1,13 +1,11 @@
-/*
- * Author: Jose Perez <josegperez@mail.com>
- */
+// Author: Jose Perez <josegperez@mail.com> and Diego Reynoso
 package edu.utep.cs.cs4330.battleship.model;
 
 import java.io.Serializable;
 
 import edu.utep.cs.cs4330.battleship.util.Vector2;
 
-public class Place implements Serializable{
+public class Place implements Serializable {
     private Vector2 position;
     private boolean hit;
     private Ship ship;
