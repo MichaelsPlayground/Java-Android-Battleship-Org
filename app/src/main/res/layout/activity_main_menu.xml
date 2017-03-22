@@ -9,10 +9,10 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
-    tools:context="edu.utep.cs.cs4330.battleship.MainMenuActivity">
+    tools:context="edu.utep.cs.cs4330.battleship.activity.MainMenuActivity">
 
     <TextView
-        android:text="Main Menu"
+        android:text="@string/main_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textMainMenu"
@@ -22,10 +22,11 @@
     <View
         android:layout_width="match_parent"
         android:background="@android:color/black"
-        android:layout_height="1dp" />
+        android:layout_height="1dp"
+        android:layout_marginBottom="20dp" />
 
     <Button
-        android:text="Play Singleplayer"
+        android:text="@string/main_menu_btn_single_player"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/btnPlayerSingle"

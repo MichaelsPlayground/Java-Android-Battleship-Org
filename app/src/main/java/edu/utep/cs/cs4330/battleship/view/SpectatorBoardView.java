@@ -1,13 +1,11 @@
-package edu.utep.cs.cs4330.battleship;
+package edu.utep.cs.cs4330.battleship.view;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 
-/**
- * Created by xeroj on 021 3 21 2017.
- */
+import edu.utep.cs.cs4330.battleship.model.Place;
 
 public class SpectatorBoardView extends BoardView {
     public SpectatorBoardView(Context context) {
@@ -29,7 +27,6 @@ public class SpectatorBoardView extends BoardView {
     @Override
     public void onBoardTouch(int x, int y) {
         // Don't hit or do anything
-        super.onBoardTouch(x, y);
     }
 
     @Override

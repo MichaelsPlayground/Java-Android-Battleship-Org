@@ -1,15 +1,18 @@
 /*
  * Author: Jose Perez <josegperez@mail.com>
  */
-package edu.utep.cs.cs4330.battleship;
+package edu.utep.cs.cs4330.battleship.model;
 
 import android.graphics.Color;
 import android.util.Log;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Ship {
+import edu.utep.cs.cs4330.battleship.util.Vector2;
+
+public class Ship implements Serializable {
     public static List<Ship> getShips(){
         List<Ship> ships = new ArrayList<>();
         ships.add(new Ship("Aircraft Carrier", 5, Color.BLACK));

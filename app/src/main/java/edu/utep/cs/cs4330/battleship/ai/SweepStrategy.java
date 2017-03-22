@@ -1,17 +1,12 @@
-package edu.utep.cs.cs4330.battleship;
+// Author: Jose Perez <josegperez@mail.com> and Diego Reynoso
+package edu.utep.cs.cs4330.battleship.ai;
 
-import java.util.Random;
+import edu.utep.cs.cs4330.battleship.model.Board;
+import edu.utep.cs.cs4330.battleship.util.Vector2;
 
-/**
- * Created by xeroj on 021 3 21 2017.
- */
-
-public class SweepStrategy extends Strategy {
+class SweepStrategy extends Strategy {
     private int currentX = 0;
     private int currentY = 0;
-
-    public SweepStrategy(){
-    }
 
     @Override
     public Vector2 play(Board board) {

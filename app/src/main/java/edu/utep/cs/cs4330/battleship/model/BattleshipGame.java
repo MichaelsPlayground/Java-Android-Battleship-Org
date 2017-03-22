@@ -1,7 +1,6 @@
-package edu.utep.cs.cs4330.battleship;
+package edu.utep.cs.cs4330.battleship.model;
 
-import android.util.Log;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,13 +8,13 @@ import java.util.List;
  * Created by xeroj on 021 3 21 2017.
  */
 
-public class Game {
+public class BattleshipGame implements Serializable {
     public interface GameListener {
         void onTurnChange(Player currentPlayer);
     }
     private final List<GameListener> listeners = new ArrayList<>();
 
-    public void addBoardListener(GameListener listener) {
+    public void addGameListener(GameListener listener) {
         if (!listeners.contains(listener))
             listeners.add(listener);
     }
@@ -29,27 +28,27 @@ public class Game {
     private Player playerOpponent;
     private int currentTurn = 0;
 
-    public Game(Player playerHuman, Player playerOpponent){
+    public BattleshipGame(Player playerHuman, Player playerOpponent){
         this.playerHuman = playerHuman;
         this.playerOpponent = playerOpponent;
 
         Board.BoardListener listener = new Board.BoardListener() {
             @Override
             public void onShipHit(Ship ship) {
+                // Ship was hit
+                // Player is not allowed multiple shots
+                // Change turns
                 if(!getCurrentPlayer().isAllowedMultipleShots)
                     nextTurn();
-                else if (getCurrentPlayer() instanceof AIPlayer){
+                else // Player is allowed more shots so let them know
                     notifyTurnChange(getCurrentPlayer());
-                }
+
+
             }
 
             @Override
             public void onShipMiss() {
-                nextTurn();
-            }
-
-            @Override
-            public void onHitOutOfBounds(){
+                // If nothing was hit change turns
                 nextTurn();
             }
         };
@@ -58,7 +57,7 @@ public class Game {
         playerOpponent.board.addBoardListener(listener);
     }
 
-    public void nextTurn(){
+    private void nextTurn(){
         currentTurn++;
         if(currentTurn > 1)
             currentTurn = 0;
@@ -66,7 +65,7 @@ public class Game {
         notifyTurnChange(getCurrentPlayer());
     }
 
-    public Player getCurrentPlayer(){
+    private Player getCurrentPlayer(){
         if (currentTurn == 0)
             return playerHuman;
         else

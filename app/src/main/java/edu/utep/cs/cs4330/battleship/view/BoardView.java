@@ -1,7 +1,7 @@
 /*
  * Author: Jose Perez <josegperez@mail.com>
  */
-package edu.utep.cs.cs4330.battleship;
+package edu.utep.cs.cs4330.battleship.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -10,6 +10,10 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
+import edu.utep.cs.cs4330.battleship.model.Board;
+import edu.utep.cs.cs4330.battleship.model.Place;
+import edu.utep.cs.cs4330.battleship.model.Ship;
 
 /**
  * A special view class to display a battleship board as a2D grid.
@@ -23,13 +27,11 @@ public class BoardView extends View {
     private final int shipMissColor = Color.GREEN;
 
     private final Paint boardPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-
     {
         boardPaint.setColor(boardColor);
     }
 
     private final Paint boardLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-
     {
         boardLinePaint.setColor(boardLineColor);
         boardLinePaint.setStrokeWidth(2);
@@ -74,8 +76,9 @@ public class BoardView extends View {
 
     public boolean disableBoardTouch = false;
     public void onBoardTouch(int x, int y){
-        if(!disableBoardTouch)
+        if(!disableBoardTouch) {
             board.hit(x, y);
+        }
     }
 
     public Paint getPlacePaint(Place p){

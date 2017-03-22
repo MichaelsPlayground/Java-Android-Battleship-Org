@@ -1,11 +1,13 @@
 /*
  * Author: Jose Perez <josegperez@mail.com>
  */
-package edu.utep.cs.cs4330.battleship;
+package edu.utep.cs.cs4330.battleship.model;
 
-import android.util.Log;
+import java.io.Serializable;
 
-public class Place {
+import edu.utep.cs.cs4330.battleship.util.Vector2;
+
+public class Place implements Serializable{
     private Vector2 position;
     private boolean hit;
     private Ship ship;

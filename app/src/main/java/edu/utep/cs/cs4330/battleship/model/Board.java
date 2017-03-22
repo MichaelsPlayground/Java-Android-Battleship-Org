@@ -1,13 +1,17 @@
-/*
- * Author: Jose Perez <josegperez@mail.com>
- */
-package edu.utep.cs.cs4330.battleship;
+// Author: Jose Perez <josegperez@mail.com> and Diego Reynoso
+package edu.utep.cs.cs4330.battleship.model;
 
-import android.util.Log;
+import android.os.Parcelable;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import edu.utep.cs.cs4330.battleship.util.Vector2;
 
 /**
  * A game board consisting of <code>size</code> * <code>size</code> places
@@ -16,13 +20,10 @@ import java.util.Random;
  * and y is a row index. A place of the board can be shot at, resulting
  * in either a hit or miss.
  */
-public class Board {
-    private Random rand;
-
+public class Board implements Serializable{
     public interface BoardListener {
         void onShipHit(Ship ship);
         void onShipMiss();
-        void onHitOutOfBounds();
     }
 
     private final List<BoardListener> boardListeners = new ArrayList<>();
@@ -42,17 +43,16 @@ public class Board {
             listener.onShipMiss();
     }
 
-    private void notifyHitOutOfBounds() {
-        for (BoardListener listener : boardListeners)
-            listener.onHitOutOfBounds();
-    }
-
     private final int size;
+
     private Place[][] boardPlaces;
-    public int totalShips;
+    private Random rand;
+    private List<Ship> boardShips;
 
     /**
      * Create a new board of the given size.
+     * Dimensions will be size * size
+     * @param size Size of the board to create.
      */
     public Board(int size) {
         this.size = size;
@@ -63,26 +63,26 @@ public class Board {
                 boardPlaces[i][j] = new Place(i, j);
 
         rand = new Random(System.nanoTime());
-        totalShips = 0;
+        boardShips = new ArrayList<>();
     }
 
+    /**
+     * Adds 5 predetermined random ships to this board
+     */
     public void addRandomShips(){
-        List<Ship> ships = Ship.getShips();
-        while (ships.size() > 0) {
-            Ship ship = ships.get(0);
+        List<Ship> randomShips = Ship.getShips();
+        while (randomShips.size() > 0) {
+            Ship ship = randomShips.get(0);
             Direction dir = getRandomDirection();
             ship.direction = dir;
             int x = getRandomCoordinate();
             int y = getRandomCoordinate();
 
             boolean placedShip = placeShip(ship, x, y);
-            if (placedShip) {
-                Log.d("Debug", "Placed ship : " + ship);
-                ships.remove(0);
-            }
+            if (placedShip)
+                randomShips.remove(0);
         }
     }
-
 
     private Direction getRandomDirection() {
         return rand.nextBoolean() ? Direction.Horizontal : Direction.Vertical;
@@ -96,6 +96,10 @@ public class Board {
         return size;
     }
 
+    public int getTotalShips(){
+        return boardShips.size();
+    }
+
     public boolean removeShip(Ship ship){
         if(ship == null || ship.placesOwned.isEmpty())
             return false;
@@ -106,8 +110,7 @@ public class Board {
         }
 
         ship.placesOwned.clear();
-        totalShips--;
-
+        boardShips.remove(ship);
         return true;
     }
 
@@ -139,7 +142,7 @@ public class Board {
             ship.placesOwned.add(p);
         }
 
-        totalShips++;
+        boardShips.add(ship);
         return true;
     }
 
@@ -150,13 +153,9 @@ public class Board {
     }
 
     public boolean hit(Place place) {
-        Log.d("Debug", String.format("Trying to hit. Valid(%s), Hit before(%s), Ship(%s)", isValidPlace(place), place.isHit(), place.getShip()));
-        if (!isValidPlace(place) || place.isHit()) {
-            notifyHitOutOfBounds();
+        if (!isValidPlace(place) || place.isHit())
             return false;
-        }
 
-        Log.d("Debug", "Hitting place");
         place.setHit(true);
         if (place.hasShip())
             notifyShipHit(place.getShip());
@@ -176,6 +175,11 @@ public class Board {
         return boardPlaces[y][x];
     }
 
+    /**
+     * Determines if a specified position is valid
+     * @param p Vector2 position to check
+     * @return True if given position is valid
+     */
     public boolean isValidPlace(Vector2 p) {
         if (p == null) return false;
 
@@ -186,6 +190,26 @@ public class Board {
         return isValidPlace(p.getPosition());
     }
 
+    public String toJSON(){
+        // Gson serializing
+        // http://stackoverflow.com/questions/28391982/how-to-use-gson-to-serialize-objects-in-android
+        return new Gson().toJson(this);
+    }
+
+    public static Board fromJSON(String boardJSON){
+        try {
+            return (Board)new Gson().fromJson(boardJSON, Board.class);
+        }
+        catch(JsonParseException ex) {
+            return null;
+        }
+    }
+
+    /**
+     * A String representation of the board
+     * Can be used to cheat and see all the ships inside
+     * @return String representation of board
+     */
     public String boardToString() {
         String result = "Hit\n";
         for (int i = 0; i < boardPlaces.length; i++) {

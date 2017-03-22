@@ -1,9 +1,42 @@
 <resources>
+
     <string name="app_name">Battleship</string>
-    <string name="new_button_label">New</string>
-    <string name="new_title">Start Game</string>
-    <string name="new_message">Are you sure you want to restart?</string>
-    <string name="num_shots">Number of Shots:</string>
-    <string name="num_sunk_ships">Sunken Ships:</string>
-    <string name="menuitem_sound">Sound</string>
+
+    <!-- Main Menu Activity -->
+    <string name="main_menu">Main Menu</string>
+    <string name="main_menu_btn_single_player">Play Singleplayer</string>
+    <string name="main_menu_singleplayer_description">Player vs AI</string>
+    <string name="main_menu_intent_gamemode">Gamemode</string>
+
+    <!-- Deployment Activity -->
+    <string name="deployment_gamemode">Selected Gamemode</string>
+    <string name="deployment_strategy">Choose AI Strategy</string>
+    <string name="deployment_strategy_random">Random</string>
+    <string name="deployment_strategy_sweep">Sweep</string>
+    <string name="deployment_options">Deployment Options</string>
+    <string name="deployment_reset">Reset</string>
+    <string name="deployment_rotation_mode">Rotation Mode</string>
+    <string name="deployment_remaining_ships">Remaining ships to deploy:</string>
+    <string name="deployment_all_ships">All ships deployed!</string>
+    <string name="deployment_deploy">Deploy</string>
+    <string name="deployment_intent_board">Board</string>
+    <string name="deployment_intent_strategy">Strategy</string>
+
+    <!-- Game Activity -->
+    <string name="game_own_board">Your board</string>
+    <string name="game_opponent_board">Your opponent</string>
+    <string name="game_turn">Turn:</string>
+    <string name="game_turn_player">Player</string>
+    <string name="game_turn_ai">AI</string>
+
+    <string name="game_exit_title">Confirmation</string>
+    <string name="game_exit_message">Are you sure you want to exit the game and go to the main menu?</string>
+
+    <string name="game_won">You won the game!</string>
+    <string name="game_lost">You lost the game!</string>
+
+    <string name="game_gameover_title"></string>
+
+    <!-- Game Activity Menu -->
+    <string name="game_menu_sound">Sound</string>
 </resources>

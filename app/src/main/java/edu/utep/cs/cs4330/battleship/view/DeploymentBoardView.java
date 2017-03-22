@@ -1,4 +1,4 @@
-package edu.utep.cs.cs4330.battleship;
+package edu.utep.cs.cs4330.battleship.view;
 
 import android.content.Context;
 import android.graphics.Paint;
@@ -6,6 +6,12 @@ import android.util.AttributeSet;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import edu.utep.cs.cs4330.battleship.model.Board;
+import edu.utep.cs.cs4330.battleship.model.Direction;
+import edu.utep.cs.cs4330.battleship.model.Place;
+import edu.utep.cs.cs4330.battleship.model.Ship;
+import edu.utep.cs.cs4330.battleship.util.Vector2;
 
 /**
  * Created by xeroj on 021 3 21 2017.

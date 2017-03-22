@@ -14,15 +14,18 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".GameActivity"
+            android:name=".activity.GameActivity" />
+
+        <activity
+            android:name=".activity.DeploymentActivity"
             android:screenOrientation="portrait"></activity>
 
-        <activity android:name=".DeploymentActivity"></activity>
+        <activity
+            android:name=".activity.MainMenuActivity"
+            android:screenOrientation="portrait">
 
-        <activity android:name=".MainMenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

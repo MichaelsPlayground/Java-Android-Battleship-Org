@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="8dp"
     android:orientation="vertical"
-    tools:context="edu.utep.cs.cs4330.battleship.DeploymentActivity">
+    tools:context="edu.utep.cs.cs4330.battleship.activity.DeploymentActivity">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -18,7 +18,7 @@
         android:id="@+id/layout_gamemode">
 
         <TextView
-            android:text="Selected Gamemode:"
+            android:text="@string/deployment_gamemode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textDepLabel"
@@ -27,7 +27,7 @@
             android:textStyle="normal|bold|italic" />
 
         <TextView
-            android:text="Player vs Computer"
+            android:text="@string/main_menu_singleplayer_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textDepGamemode"
@@ -54,7 +54,7 @@
             android:layout_width="150dp">
 
             <TextView
-                android:text="Choose Computer Strategy"
+                android:text="@string/deployment_strategy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/textDepLabel2"
@@ -68,14 +68,14 @@
                 android:id="@+id/radioGroupStrategy">
 
                 <RadioButton
-                    android:text="Random"
+                    android:text="@string/deployment_strategy_random"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/radioRandom"
                     android:layout_weight="1" />
 
                 <RadioButton
-                    android:text="Sweep"
+                    android:text="@string/deployment_strategy_sweep"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/radioSweep"
@@ -95,7 +95,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="Deployment Options"
+                android:text="@string/deployment_options"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView2"
@@ -103,14 +103,14 @@
                 android:textStyle="normal|bold" />
 
             <Button
-                android:text="Reset"
+                android:text="@string/deployment_reset"
                 android:layout_width="match_parent"
                 android:id="@+id/btnReset"
                 android:layout_height="40dp"
                 android:onClick="onClickReset" />
 
             <Switch
-                android:text="Rotation Mode"
+                android:text="@string/deployment_rotation_mode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/switch_rotation"
@@ -126,7 +126,7 @@
         android:layout_height="1dp" />
 
     <TextView
-        android:text="Ships remaining to deploy:"
+        android:text="@string/deployment_remaining_ships"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textDeployStatus"
@@ -145,7 +145,7 @@
 
         <view
             android:layout_width="match_parent"
-            class="edu.utep.cs.cs4330.battleship.DeploymentBoardView"
+            class="edu.utep.cs.cs4330.battleship.view.DeploymentBoardView"
             android:id="@+id/boardViewDeployment"
             android:textAlignment="center"
             android:layout_height="300dp"
@@ -164,7 +164,7 @@
             android:layout_weight="1" />
 
         <Button
-            android:text="Deploy"
+            android:text="@string/deployment_deploy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnDeploy"

@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="edu.utep.cs.cs4330.battleship.GameActivity">
+    tools:context="edu.utep.cs.cs4330.battleship.activity.GameActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,14 +31,17 @@
                 android:id="@+id/layoutGameBoard">
 
                 <TextView
-                    android:text="Your board"
-                    android:layout_width="wrap_content"
+                    android:text="@string/game_own_board"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/textView"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp" />
 
-                <edu.utep.cs.cs4330.battleship.BoardView
-                    android:id="@+id/spectatorBoardView"
+                <edu.utep.cs.cs4330.battleship.view.SpectatorBoardView
+                    android:id="@+id/board_view_small"
                     android:layout_weight="1"
                     android:layout_marginTop="10dp"
                     android:layout_width="150dp"
@@ -53,7 +56,7 @@
                 android:layout_marginTop="20dp">
 
                 <Button
-                    android:text="Main Menu"
+                    android:text="@string/main_menu"
                     android:layout_width="match_parent"
                     android:id="@+id/button"
                     android:layout_weight="1"
@@ -61,10 +64,10 @@
                     android:onClick="onClickMainMenu" />
 
                 <Switch
-                    android:text="Sound"
+                    android:text="@string/game_menu_sound"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/switchSound"
+                    android:id="@+id/switch_sound"
                     android:layout_weight="1"
                     android:textSize="24sp"
                     android:textAlignment="center"
@@ -76,7 +79,7 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:text="Turn:"
+                        android:text="@string/game_turn"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/textView3"
@@ -91,9 +94,9 @@
                         android:layout_width="30dp" />
 
                     <TextView
-                        android:text="Player"
+                        android:text="@string/game_turn_player"
                         android:layout_height="wrap_content"
-                        android:id="@+id/textCurrentPlayer"
+                        android:id="@+id/text_current_player"
                         android:layout_weight="1"
                         android:textSize="24sp"
                         android:textAlignment="textEnd"
@@ -105,11 +108,32 @@
 
         </LinearLayout>
 
-        <view
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/layoutOpponentTop"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp">
+
+            <View
+                android:layout_width="wrap_content"
+                android:background="@android:color/black"
+                android:layout_height="2dp" />
+
+            <TextView
+                android:text="@string/game_opponent_board"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView4"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimary" />
+        </LinearLayout>
+
+        <edu.utep.cs.cs4330.battleship.view.BoardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            class="edu.utep.cs.cs4330.battleship.BoardView"
-            android:id="@+id/opponentBoardView" />
+            android:id="@+id/board_view_big" />
 
     </LinearLayout>
 

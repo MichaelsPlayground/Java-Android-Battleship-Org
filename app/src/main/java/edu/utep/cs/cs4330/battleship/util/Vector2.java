@@ -1,9 +1,11 @@
 /*
  * Author: Jose Perez <josegperez@mail.com>
  */
-package edu.utep.cs.cs4330.battleship;
+package edu.utep.cs.cs4330.battleship.util;
 
-public class Vector2 {
+import java.io.Serializable;
+
+public class Vector2 implements Serializable{
     public int x, y;
 
     public static Vector2 Zero = new Vector2(0, 0);
