@@ -33,7 +33,7 @@ public class DeploymentActivity extends AppCompatActivity implements DeploymentB
         setContentView(R.layout.activity_deployment);
 
         textGamemode = (TextView)findViewById(R.id.textDepGamemode);
-        boardView = (DeploymentBoardView)findViewById(R.id.boardViewDeployment);
+        boardView = (DeploymentBoardView) findViewById(R.id.boardViewDeployment);
         buttonDeploy = (Button)findViewById(R.id.btnDeploy);
         switchRotation = (Switch)findViewById(R.id.switch_rotation);
         textDeployStatus = (TextView)findViewById(R.id.textDeployStatus);

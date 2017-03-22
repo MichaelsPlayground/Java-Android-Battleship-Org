@@ -5,27 +5,29 @@ package edu.utep.cs.cs4330.battleship;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.media.MediaPlayer;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.Switch;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 
 public class GameActivity extends AppCompatActivity {
     // Views
-    private BoardView boardView;
+    private SpectatorBoardView spectatorBoardView;
     private Switch switchSound;
 
     // Models
     private Board board;
     private boolean isSoundEnabled = true;
+
+    private AlertDialog.Builder dialogExit;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -37,6 +39,7 @@ public class GameActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.menuitem_sound) {
             isSoundEnabled = !isSoundEnabled;
+            switchSound.setChecked(isSoundEnabled);
         }
 
         return super.onOptionsItemSelected(item);
@@ -47,9 +50,30 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        boardView = (BoardView) findViewById(R.id.boardView);
+        dialogExit = new AlertDialog.Builder(this)
+                .setTitle("Confirmation")
+                .setMessage("Are you sure you want to exit the game and go to the main menu?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent i = new Intent(getParent(), MainMenuActivity.class);
+                        startActivity(i);
+                        finish();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert);
+
+        spectatorBoardView = (SpectatorBoardView) findViewById(R.id.spectatorBoardView);
         switchSound = (Switch) findViewById(R.id.switchSound);
-        //reset();
+        switchSound.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                isSoundEnabled = isChecked;
+            }
+        });
 
         Bundle extras = getIntent().getExtras();
         if(extras == null)
@@ -59,7 +83,7 @@ public class GameActivity extends AppCompatActivity {
         jsonMyObject = extras.getString("BOARD");
         if(jsonMyObject != null) {
             Board b = new Gson().fromJson(jsonMyObject, Board.class);
-            boardView.setBoard(b);
+            spectatorBoardView.setBoard(b);
         }
 
     }
@@ -69,22 +93,13 @@ public class GameActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
+    public void onClickMainMenu(View v) {
+        dialogExit.show();
+    }
 
-    public void onNewButton(View v) {
-        new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.new_title))
-                .setMessage(getString(R.string.new_message))
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        reset();
-                    }
-                })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
+    @Override
+    public void onBackPressed() {
+        dialogExit.show();
     }
 
     private void reset() {
@@ -103,7 +118,7 @@ public class GameActivity extends AppCompatActivity {
 
             }
         });
-        boardView.setBoard(board);
+        spectatorBoardView.setBoard(board);
     }
 
 }

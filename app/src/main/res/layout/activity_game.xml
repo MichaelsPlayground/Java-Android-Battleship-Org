@@ -37,8 +37,8 @@
                     android:id="@+id/textView"
                     android:layout_weight="1" />
 
-                <edu.utep.cs.cs4330.battleship.BoardView
-                    android:id="@+id/boardView"
+                <edu.utep.cs.cs4330.battleship.SpectatorBoardView
+                    android:id="@+id/spectatorBoardView"
                     android:layout_weight="1"
                     android:layout_marginTop="10dp"
                     android:layout_width="150dp"
@@ -106,7 +106,7 @@
         <view
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            class="edu.utep.cs.cs4330.battleship.BoardView"
+            class="edu.utep.cs.cs4330.battleship.SpectatorBoardView"
             android:id="@+id/view" />
 
     </LinearLayout>

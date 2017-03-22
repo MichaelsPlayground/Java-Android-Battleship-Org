@@ -1,11 +1,8 @@
 package edu.utep.cs.cs4330.battleship;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.Parcelable;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +11,7 @@ import java.util.List;
  * Created by xeroj on 021 3 21 2017.
  */
 
-public class DeploymentBoardView extends BoardView {
+public class DeploymentBoardView extends SpectatorBoardView {
 
     public interface DeploymentListener {
         void onShipDeployed(Ship ship);
