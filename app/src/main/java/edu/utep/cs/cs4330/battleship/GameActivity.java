@@ -58,6 +58,7 @@ public class GameActivity extends AppCompatActivity {
                         Intent i = new Intent(getParent(), MainMenuActivity.class);
                         startActivity(i);
                         finish();
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {

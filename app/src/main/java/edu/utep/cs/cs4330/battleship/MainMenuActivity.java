@@ -16,5 +16,6 @@ public class MainMenuActivity extends AppCompatActivity {
         Intent i = new Intent(this, DeploymentActivity.class);
         i.putExtra("GAMEMODE", "Player vs Computer");
         startActivity(i);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 }

@@ -99,6 +99,7 @@ public class DeploymentActivity extends AppCompatActivity implements DeploymentB
         i.putExtra("BOARD", new Gson().toJson(boardView.getBoard()));
         i.putExtra("STRATEGY", strategy);
         startActivity(i);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     @Override
