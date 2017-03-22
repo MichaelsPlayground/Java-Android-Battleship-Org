@@ -9,6 +9,7 @@ public class MainMenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_main_menu);
     }
 
@@ -16,6 +17,5 @@ public class MainMenuActivity extends AppCompatActivity {
         Intent i = new Intent(this, DeploymentActivity.class);
         i.putExtra("GAMEMODE", "Player vs Computer");
         startActivity(i);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 }

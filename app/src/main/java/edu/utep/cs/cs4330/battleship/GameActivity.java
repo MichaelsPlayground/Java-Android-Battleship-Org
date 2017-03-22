@@ -6,6 +6,7 @@ package edu.utep.cs.cs4330.battleship;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,16 +19,35 @@ import android.widget.Switch;
 
 import com.google.gson.Gson;
 
-public class GameActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity implements Game.GameListener {
     // Views
     private SpectatorBoardView spectatorBoardView;
+    private BoardView opponentBoardView;
     private Switch switchSound;
 
-    // Models
-    private Board board;
+    private Game game;
+
+    private Board playerBoard;
+    private int playerBoardSunkShips;
+
+    private Board cpuBoard;
+    private int cpuBoardSunkShips;
+
     private boolean isSoundEnabled = true;
 
     private AlertDialog.Builder dialogExit;
+    private AlertDialog.Builder dialogGameover;
+
+    @Override
+    public void onTurnChange(Player currentPlayer) {
+        if(currentPlayer instanceof AIPlayer){
+            opponentBoardView.disableBoardTouch = true;
+            currentPlayer.board.hit(currentPlayer.onOwnTurn());
+        }
+        else{
+            opponentBoardView.disableBoardTouch = true;
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -48,6 +68,7 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_game);
 
         dialogExit = new AlertDialog.Builder(this)
@@ -55,10 +76,9 @@ public class GameActivity extends AppCompatActivity {
                 .setMessage("Are you sure you want to exit the game and go to the main menu?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent i = new Intent(getParent(), MainMenuActivity.class);
+                        Intent i = new Intent(getApplication(), MainMenuActivity.class);
                         startActivity(i);
                         finish();
-                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -67,7 +87,20 @@ public class GameActivity extends AppCompatActivity {
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert);
 
+        dialogGameover = new AlertDialog.Builder(this)
+                .setTitle("Game over!")
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent i = new Intent(getApplication(), MainMenuActivity.class);
+                        startActivity(i);
+                        finish();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert);
+
         spectatorBoardView = (SpectatorBoardView) findViewById(R.id.spectatorBoardView);
+        opponentBoardView = (BoardView) findViewById(R.id.opponentBoardView);
+
         switchSound = (Switch) findViewById(R.id.switchSound);
         switchSound.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -83,10 +116,55 @@ public class GameActivity extends AppCompatActivity {
         String jsonMyObject;
         jsonMyObject = extras.getString("BOARD");
         if(jsonMyObject != null) {
-            Board b = new Gson().fromJson(jsonMyObject, Board.class);
-            spectatorBoardView.setBoard(b);
-        }
+            playerBoard = new Gson().fromJson(jsonMyObject, Board.class);
+            playerBoard.addBoardListener(new Board.BoardListener() {
+                @Override
+                public void onShipHit(Ship ship) {
+                    playSound(Sound.Hit);
 
+                    if(ship.isDestroyed()) {
+                        playSound(Sound.Sink);
+                        playerBoardSunkShips++;
+                    }
+
+                    if(playerBoardSunkShips >= playerBoard.totalShips)
+                        onGameover(false);
+                }
+
+                @Override
+                public void onShipMiss() {
+
+                }
+            });
+            spectatorBoardView.setBoard(playerBoard);
+        }
+        Player playerCPU = new AIPlayer(playerBoard, true, new RandomStrategy());
+
+        cpuBoard = new Board(10);
+        cpuBoard.addBoardListener(new Board.BoardListener() {
+            @Override
+            public void onShipHit(Ship ship) {
+                playSound(Sound.Hit);
+
+                if(ship.isDestroyed()) {
+                    playSound(Sound.Sink);
+                    cpuBoardSunkShips++;
+                }
+
+                if(cpuBoardSunkShips >= cpuBoard.totalShips)
+                    onGameover(true);
+            }
+
+            @Override
+            public void onShipMiss() {
+
+            }
+        });
+        cpuBoard.addRandomShips();
+        opponentBoardView.setBoard(cpuBoard);
+        Player playerHuman = new Player(cpuBoard, true);
+
+        game = new Game(playerHuman, playerCPU);
     }
 
     @Override
@@ -103,23 +181,34 @@ public class GameActivity extends AppCompatActivity {
         dialogExit.show();
     }
 
-    private void reset() {
+    public void onGameover(boolean humanWin){
+        String message;
 
-        board = new Board(10);
-        Log.d("Cheat", board.boardToString());
+        if(humanWin)
+            message = "You won!";
+        else
+            message = "You lost!";
 
-        board.addBoardListener(new Board.BoardListener() {
-            @Override
-            public void onShipHit(Ship ship) {
-
-            }
-
-            @Override
-            public void onShipMiss() {
-
-            }
-        });
-        spectatorBoardView.setBoard(board);
+        playSound(Sound.Gameover);
+        dialogGameover.setMessage(message);
+        dialogGameover.show();
     }
 
+    enum Sound { Hit, Sink, Gameover };
+
+    public void playSound(Sound sound){
+        if(!isSoundEnabled)
+            return;
+
+        MediaPlayer mp;
+
+        if(sound == Sound.Hit)
+            mp = MediaPlayer.create(getApplicationContext(), R.raw.hit);
+        else if(sound == Sound.Sink)
+            mp = MediaPlayer.create(getApplicationContext(), R.raw.sink);
+        else
+            mp = MediaPlayer.create(getApplicationContext(), R.raw.gameover);
+
+        mp.start();
+    }
 }

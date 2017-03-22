@@ -31,10 +31,6 @@ public class Board {
             boardListeners.add(listener);
     }
 
-    public void removeBoardListener(BoardListener listener) {
-        boardListeners.remove(listener);
-    }
-
     private void notifyShipHit(Ship ship) {
         for (BoardListener listener : boardListeners)
             listener.onShipHit(ship);
@@ -47,6 +43,7 @@ public class Board {
 
     private final int size;
     private Place[][] boardPlaces;
+    public int totalShips;
 
     /**
      * Create a new board of the given size.
@@ -60,6 +57,7 @@ public class Board {
                 boardPlaces[i][j] = new Place(i, j);
 
         rand = new Random(System.nanoTime());
+        totalShips = 0;
     }
 
     public void addRandomShips(){
@@ -102,6 +100,7 @@ public class Board {
         }
 
         ship.placesOwned.clear();
+        totalShips--;
 
         return true;
     }
@@ -134,8 +133,11 @@ public class Board {
             ship.placesOwned.add(p);
         }
 
+        totalShips++;
         return true;
     }
+
+    public boolean hit(Vector2 pos) { return hit(pos.x, pos.y); }
 
     public boolean hit(int x, int y) {
         return hit(placeAt(x, y));

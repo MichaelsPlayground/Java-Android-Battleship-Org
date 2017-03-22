@@ -72,8 +72,10 @@ public class BoardView extends View {
         invalidate();
     }
 
+    public boolean disableBoardTouch = false;
     public void onBoardTouch(int x, int y){
-        board.hit(x, y);
+        if(!disableBoardTouch)
+            board.hit(x, y);
     }
 
     public Paint getPlacePaint(Place p){

@@ -107,8 +107,8 @@
         <view
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            class="edu.utep.cs.cs4330.battleship.SpectatorBoardView"
-            android:id="@+id/view" />
+            class="edu.utep.cs.cs4330.battleship.BoardView"
+            android:id="@+id/opponentBoardView" />
 
     </LinearLayout>
 
