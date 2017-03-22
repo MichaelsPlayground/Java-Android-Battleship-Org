@@ -15,7 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity {
     // Views
     private BoardView boardView;
     private TextView textShots;
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("Debug", "Created");
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_game);
 
         boardView = (BoardView) findViewById(R.id.boardView);
         textShots = (TextView) findViewById(R.id.txtShots);

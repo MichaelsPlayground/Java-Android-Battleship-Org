@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_deployment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="8dp"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="8dp"
+    android:orientation="vertical"
+    tools:context="edu.utep.cs.cs4330.battleship.DeploymentActivity">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_gamemode">
+
+        <TextView
+            android:text="Selected Gamemode:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textDepLabel"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textStyle="normal|bold|italic" />
+
+        <TextView
+            android:text="Player vs Computer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textDepGamemode"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textStyle="normal|italic" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:background="@android:color/black"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            android:layout_width="150dp">
+
+            <TextView
+                android:text="Choose Computer Strategy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textDepLabel2"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:textStyle="normal|bold" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/radioGroupStrategy">
+
+                <RadioButton
+                    android:text="Random"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/radioRandom"
+                    android:layout_weight="1" />
+
+                <RadioButton
+                    android:text="Smart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/radioSmart"
+                    android:layout_weight="1" />
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="Deployment Options"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView2"
+                android:textSize="18sp"
+                android:textStyle="normal|bold" />
+
+            <Button
+                android:text="Reset"
+                android:layout_width="match_parent"
+                android:id="@+id/btnReset"
+                android:layout_height="40dp"
+                android:onClick="onClickReset" />
+
+            <Switch
+                android:text="Rotation Mode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/switch_rotation"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:background="@android:color/black"
+        android:layout_height="1dp" />
+
+    <TextView
+        android:text="Ships remaining to deploy:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textDeployStatus"
+        android:textAlignment="center" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/boardViewLayout">
+
+        <Space
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_width="55dp" />
+
+        <view
+            android:layout_width="match_parent"
+            class="edu.utep.cs.cs4330.battleship.DeploymentBoardView"
+            android:id="@+id/boardViewDeployment"
+            android:textAlignment="center"
+            android:layout_height="300dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/deployLayout">
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Button
+            android:text="Deploy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnDeploy"
+            android:layout_weight="1"
+            android:enabled="false"/>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+</LinearLayout>

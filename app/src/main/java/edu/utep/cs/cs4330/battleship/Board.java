@@ -21,7 +21,6 @@ public class Board {
 
     public interface BoardListener {
         void onShipHit(Ship ship);
-
         void onShipMiss();
     }
 
@@ -61,21 +60,18 @@ public class Board {
                 boardPlaces[i][j] = new Place(i, j);
 
         rand = new Random(System.nanoTime());
+    }
 
-        List<Ship> ships = new ArrayList<Ship>();
-        ships.add(new Ship("Aircraft Carrier", 5));
-        ships.add(new Ship("Battleship", 4));
-        ships.add(new Ship("Frigate", 3));
-        ships.add(new Ship("Submarine", 3));
-        ships.add(new Ship("Minesweeper", 2));
-
+    public void addRandomShips(){
+        List<Ship> ships = Ship.getShips();
         while (ships.size() > 0) {
             Ship ship = ships.get(0);
             Direction dir = getRandomDirection();
+            ship.direction = dir;
             int x = getRandomCoordinate();
             int y = getRandomCoordinate();
 
-            boolean placedShip = placeShip(ship, x, y, dir);
+            boolean placedShip = placeShip(ship, x, y);
             if (placedShip) {
                 Log.d("Debug", "Placed ship : " + ship);
                 ships.remove(0);
@@ -96,13 +92,31 @@ public class Board {
         return size;
     }
 
-    public boolean placeShip(Ship ship, int x, int y, Direction dir) {
+    public boolean removeShip(Ship ship){
+        if(ship == null || ship.placesOwned.isEmpty())
+            return false;
+
+        for (Vector2 pos : ship.placesOwned){
+            placeAt(pos).setShip(null);
+            placeAt(pos).setHit(false);
+        }
+
+        ship.placesOwned.clear();
+
+        return true;
+    }
+
+    public boolean placeShip(Ship ship, Vector2 pos){
+        return placeShip(ship, pos.x, pos.y);
+    }
+
+    public boolean placeShip(Ship ship, int x, int y) {
         List<Vector2> placesForShip = new ArrayList<Vector2>();
 
         // Get the places where the ship resides
-        for (int i = 0; i < ship.getSize(); i++) {
+        for (int i = 0; i < ship.size; i++) {
             Vector2 nextPlace;
-            if (dir == Direction.Vertical)
+            if (ship.direction == Direction.Horizontal)
                 nextPlace = new Vector2(x + i, y);
             else
                 nextPlace = new Vector2(x, y + i);
@@ -117,6 +131,7 @@ public class Board {
         for (Vector2 p : placesForShip) {
             placeAt(p).setShip(ship);
             placeAt(p).setHit(false);
+            ship.placesOwned.add(p);
         }
 
         return true;
@@ -158,18 +173,6 @@ public class Board {
 
     public boolean isValidPlace(Place p) {
         return isValidPlace(p.getPosition());
-    }
-
-    public boolean isGameOver() {
-        return false;
-    }
-
-    public String exportBoard(){
-        return "";
-    }
-
-    public void importBoard(String exportedBoard){
-
     }
 
     public String boardToString() {

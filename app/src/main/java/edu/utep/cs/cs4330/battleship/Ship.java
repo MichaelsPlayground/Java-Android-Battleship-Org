@@ -3,15 +3,49 @@
  */
 package edu.utep.cs.cs4330.battleship;
 
+import android.graphics.Color;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Ship {
-    private String name;
-    private final int size;
-    private int health;
+    public static List<Ship> getShips(){
+        List<Ship> ships = new ArrayList<>();
+        ships.add(new Ship("Aircraft Carrier", 5, Color.BLACK));
+        ships.add(new Ship("Battleship", 4, Color.RED));
+        ships.add(new Ship("Frigate", 3, Color.YELLOW));
+        ships.add(new Ship("Submarine", 3, Color.GREEN));
+        ships.add(new Ship("Minesweeper", 2, Color.MAGENTA));
+        return ships;
+    }
+
+    public String name;
+    public final int size;
+    public int health;
+    public List<Vector2> placesOwned;
+    public Direction direction;
+    public int preferredColor;
 
     public Ship(String name, int size) {
         this.name = name;
         this.size = size;
-        reset();
+        this.direction = Direction.Horizontal;
+        this.preferredColor = Color.GREEN;
+
+        this.health = size;
+        placesOwned = new ArrayList<Vector2>();
+    }
+
+    public Ship(String name, int size, int preferredColor){
+        this(name, size);
+        this.preferredColor = preferredColor;
+    }
+
+    public void flipDirection(){
+        if(direction == Direction.Horizontal)
+            direction = Direction.Vertical;
+        else
+            direction = Direction.Horizontal;
     }
 
     public void reset() {
@@ -28,11 +62,7 @@ public class Ship {
         return health == 0;
     }
 
-    public int getSize() {
-        return size;
-    }
-
     public String toString() {
-        return String.format("{Ship: %s, Size=%s, Health=%s}", name, size, health);
+        return String.format("{Name=%s, Size=%s, Health=%s}", name, size, health);
     }
 }

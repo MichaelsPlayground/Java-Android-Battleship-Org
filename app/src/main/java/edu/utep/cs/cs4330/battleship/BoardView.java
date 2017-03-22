@@ -62,6 +62,19 @@ public class BoardView extends View {
         invalidate();
     }
 
+    public void onBoardTouch(int x, int y){
+        board.hit(x, y);
+    }
+
+    public Paint getPlacePaint(Place p){
+        Ship s = p.getShip();
+        return s == null ? shipHitPaint : shipMissPaint;
+    }
+
+    public boolean isPlacePainted(Place p){
+        return p.isHit();
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
@@ -70,7 +83,7 @@ public class BoardView extends View {
                 if (xy >= 0) {
                     int x = xy / 100;
                     int y = xy % 100;
-                    board.hit(x, y);
+                    onBoardTouch(x, y);
                     invalidate();
                 }
                 break;
@@ -97,14 +110,13 @@ public class BoardView extends View {
         for(int x = 0; x < board.size(); x++) {
             for (int y = 0; y < board.size(); y++) {
                 Place place = board.placeAt(x, y);
-                if(place.isHit()) {
+                if(isPlacePainted(place)) {
                     // Fill with paint
                     float left = x * lineGap(); // X1
                     float top = y * lineGap(); // Y1
                     float right = left + lineGap(); // X2 = X1 + Width
                     float bottom = top + lineGap(); // Y2 = Y1 + Height
-
-                    Paint paint = place.getShip() == null ? shipHitPaint : shipMissPaint;
+                    Paint paint = getPlacePaint(place);
                     canvas.drawRect(left, top, right, bottom, paint);
                 }
             }
@@ -130,7 +142,7 @@ public class BoardView extends View {
     /** Calculate the gap between two horizontal/vertical lines. */
     protected float lineGap() {
         if(board == null)
-            return -1;
+            return Math.min(getMeasuredHeight(), getMeasuredWidth());
 
         return (Math.min(getMeasuredWidth(), getMeasuredHeight()) / (float) board.size());
     }
@@ -138,15 +150,13 @@ public class BoardView extends View {
     /** Calculate the number of horizontal/vertical lines. */
     private int numOfLines() {
         if (board == null)
-            return -1;
+            return 1;
 
         return board.size() + 1;
     }
 
     /** Calculate the maximum screen coordinate. */
     protected float maxCoord() {
-        if(board == null)
-            return -1;
         return lineGap() * (numOfLines() - 1);
     }
 
