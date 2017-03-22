@@ -16,14 +16,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
 public class GameActivity extends AppCompatActivity implements Game.GameListener {
     // Views
-    private SpectatorBoardView spectatorBoardView;
+    private BoardView spectatorBoardView;
     private BoardView opponentBoardView;
     private Switch switchSound;
+
+    private TextView textCurrentPlayer;
 
     private Game game;
 
@@ -40,13 +43,21 @@ public class GameActivity extends AppCompatActivity implements Game.GameListener
 
     @Override
     public void onTurnChange(Player currentPlayer) {
+        /*Log.d("Debug", "Turn change");
         if(currentPlayer instanceof AIPlayer){
+            Log.d("Debug", "AI's turn");
+            textCurrentPlayer.setText("AI");
             opponentBoardView.disableBoardTouch = true;
-            currentPlayer.board.hit(currentPlayer.onOwnTurn());
+            Vector2 simulatedPlay = currentPlayer.onOwnTurn();
+            boolean hit = playerBoard.hit(simulatedPlay);
+
+            opponentBoardView.invalidate();
+            spectatorBoardView.invalidate();
         }
         else{
-            opponentBoardView.disableBoardTouch = true;
-        }
+            textCurrentPlayer.setText("Player");
+            opponentBoardView.disableBoardTouch = false;
+        }*/
     }
 
     @Override
@@ -98,8 +109,10 @@ public class GameActivity extends AppCompatActivity implements Game.GameListener
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert);
 
-        spectatorBoardView = (SpectatorBoardView) findViewById(R.id.spectatorBoardView);
+        spectatorBoardView = (BoardView) findViewById(R.id.spectatorBoardView);
         opponentBoardView = (BoardView) findViewById(R.id.opponentBoardView);
+
+        textCurrentPlayer = (TextView)findViewById(R.id.textCurrentPlayer);
 
         switchSound = (Switch) findViewById(R.id.switchSound);
         switchSound.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -113,18 +126,20 @@ public class GameActivity extends AppCompatActivity implements Game.GameListener
         if(extras == null)
             return;
 
-        String jsonMyObject;
+        /*String jsonMyObject;
         jsonMyObject = extras.getString("BOARD");
         if(jsonMyObject != null) {
             playerBoard = new Gson().fromJson(jsonMyObject, Board.class);
+
             playerBoard.addBoardListener(new Board.BoardListener() {
                 @Override
                 public void onShipHit(Ship ship) {
-                    playSound(Sound.Hit);
-
+                    //playSound(Sound.Hit);
+                    Log.d("Debug", "AI damaged ship: " + ship.health);
                     if(ship.isDestroyed()) {
                         playSound(Sound.Sink);
                         playerBoardSunkShips++;
+                        Log.d("Debug", "AI sunk a ship");
                     }
 
                     if(playerBoardSunkShips >= playerBoard.totalShips)
@@ -135,12 +150,32 @@ public class GameActivity extends AppCompatActivity implements Game.GameListener
                 public void onShipMiss() {
 
                 }
-            });
-            spectatorBoardView.setBoard(playerBoard);
-        }
-        Player playerCPU = new AIPlayer(playerBoard, true, new RandomStrategy());
 
+                @Override
+                public void onHitOutOfBounds(){
+
+                }
+            });
+        }
+
+        spectatorBoardView.setBoard(playerBoard);
+
+        String strategyText = extras.getString("STRATEGY");
+        Strategy strategy = new RandomStrategy();
+        if(strategyText != null){
+            if(strategyText.equalsIgnoreCase("random"))
+                strategy = new RandomStrategy();
+            else if(strategyText.equalsIgnoreCase("sweep"))
+                strategy = new SweepStrategy();
+        }
+
+
+
+        Player playerCPU = new AIPlayer(playerBoard, false, strategy);
+
+*/
         cpuBoard = new Board(10);
+        cpuBoard.addRandomShips();
         cpuBoard.addBoardListener(new Board.BoardListener() {
             @Override
             public void onShipHit(Ship ship) {
@@ -159,12 +194,18 @@ public class GameActivity extends AppCompatActivity implements Game.GameListener
             public void onShipMiss() {
 
             }
+
+            @Override
+            public void onHitOutOfBounds(){
+
+            }
         });
-        cpuBoard.addRandomShips();
+
         opponentBoardView.setBoard(cpuBoard);
         Player playerHuman = new Player(cpuBoard, true);
 
         game = new Game(playerHuman, playerCPU);
+        game.addBoardListener(this);
     }
 
     @Override

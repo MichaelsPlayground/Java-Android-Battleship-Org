@@ -22,6 +22,7 @@ public class Board {
     public interface BoardListener {
         void onShipHit(Ship ship);
         void onShipMiss();
+        void onHitOutOfBounds();
     }
 
     private final List<BoardListener> boardListeners = new ArrayList<>();
@@ -39,6 +40,11 @@ public class Board {
     private void notifyShipMiss() {
         for (BoardListener listener : boardListeners)
             listener.onShipMiss();
+    }
+
+    private void notifyHitOutOfBounds() {
+        for (BoardListener listener : boardListeners)
+            listener.onHitOutOfBounds();
     }
 
     private final int size;
@@ -145,9 +151,12 @@ public class Board {
 
     public boolean hit(Place place) {
         Log.d("Debug", String.format("Trying to hit. Valid(%s), Hit before(%s), Ship(%s)", isValidPlace(place), place.isHit(), place.getShip()));
-        if (!isValidPlace(place) || place.isHit())
+        if (!isValidPlace(place) || place.isHit()) {
+            notifyHitOutOfBounds();
             return false;
+        }
 
+        Log.d("Debug", "Hitting place");
         place.setHit(true);
         if (place.hasShip())
             notifyShipHit(place.getShip());

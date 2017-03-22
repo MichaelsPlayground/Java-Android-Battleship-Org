@@ -37,7 +37,7 @@
                     android:id="@+id/textView"
                     android:layout_weight="1" />
 
-                <edu.utep.cs.cs4330.battleship.SpectatorBoardView
+                <edu.utep.cs.cs4330.battleship.BoardView
                     android:id="@+id/spectatorBoardView"
                     android:layout_weight="1"
                     android:layout_marginTop="10dp"
@@ -67,7 +67,8 @@
                     android:id="@+id/switchSound"
                     android:layout_weight="1"
                     android:textSize="24sp"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:checked="true" />
 
                 <LinearLayout
                     android:orientation="horizontal"
@@ -92,7 +93,7 @@
                     <TextView
                         android:text="Player"
                         android:layout_height="wrap_content"
-                        android:id="@+id/textView5"
+                        android:id="@+id/textCurrentPlayer"
                         android:layout_weight="1"
                         android:textSize="24sp"
                         android:textAlignment="textEnd"

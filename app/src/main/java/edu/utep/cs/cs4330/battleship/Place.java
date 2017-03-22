@@ -3,6 +3,8 @@
  */
 package edu.utep.cs.cs4330.battleship;
 
+import android.util.Log;
+
 public class Place {
     private Vector2 position;
     private boolean hit;
@@ -33,8 +35,9 @@ public class Place {
     public void setHit(boolean isHit) {
         hit = isHit;
 
-        if (isHit == true && ship != null)
+        if (isHit == true && ship != null) {
             ship.hit();
+        }
     }
 
     public boolean isHit() {

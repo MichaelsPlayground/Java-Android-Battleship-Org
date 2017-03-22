@@ -62,8 +62,8 @@ public class DeploymentActivity extends AppCompatActivity implements DeploymentB
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if(checkedId == R.id.radioRandom)
                     strategy = "random";
-                else if(checkedId == R.id.radioSmart)
-                    strategy = "smart";
+                else if(checkedId == R.id.radioSweep)
+                    strategy = "sweep";
 
                 checkReady();
             }

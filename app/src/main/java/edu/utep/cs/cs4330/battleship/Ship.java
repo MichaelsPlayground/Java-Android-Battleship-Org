@@ -4,6 +4,7 @@
 package edu.utep.cs.cs4330.battleship;
 
 import android.graphics.Color;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,7 @@ public class Ship {
     }
 
     public void hit() {
+        Log.d("Debug", toString() + ", decreasing health to " + health);
         health--;
         if (health < 0)
             health = 0;

@@ -29,17 +29,22 @@ public class SpectatorBoardView extends BoardView {
     @Override
     public void onBoardTouch(int x, int y) {
         // Don't hit or do anything
+        super.onBoardTouch(x, y);
     }
 
     @Override
     public Paint getPlacePaint(Place p){
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        if (p.hasShip())
+        if (p.isHit() && p.hasShip())
+            paint.setColor(Color.BLACK);
+        else if (p.hasShip())
             paint.setColor(Color.GREEN);
+
         else if(p.isHit())
             paint.setColor(Color.RED);
-        else if (p.isHit() && p.hasShip())
-            paint.setColor(Color.BLACK);
+
+        else
+            paint.setColor(Color.MAGENTA);
 
         return paint;
     }

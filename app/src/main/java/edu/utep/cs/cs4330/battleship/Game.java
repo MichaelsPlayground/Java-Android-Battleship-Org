@@ -1,5 +1,7 @@
 package edu.utep.cs.cs4330.battleship;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,10 +38,18 @@ public class Game {
             public void onShipHit(Ship ship) {
                 if(!getCurrentPlayer().isAllowedMultipleShots)
                     nextTurn();
+                else if (getCurrentPlayer() instanceof AIPlayer){
+                    notifyTurnChange(getCurrentPlayer());
+                }
             }
 
             @Override
             public void onShipMiss() {
+                nextTurn();
+            }
+
+            @Override
+            public void onHitOutOfBounds(){
                 nextTurn();
             }
         };
@@ -61,20 +71,5 @@ public class Game {
             return playerHuman;
         else
             return playerOpponent;
-    }
-
-    public boolean hit(int x, int y){
-        Player p = getCurrentPlayer();
-        boolean isHit = p.board.hit(x, y);
-
-        // You missed
-        if(!isHit)
-            nextTurn();
-
-        // You hit and are not allowed multiple hits
-        if(isHit && !p.isAllowedMultipleShots)
-            nextTurn();
-
-        return false;
     }
 }
