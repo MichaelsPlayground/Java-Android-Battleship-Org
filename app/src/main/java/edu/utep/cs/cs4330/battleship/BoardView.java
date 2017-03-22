@@ -23,23 +23,27 @@ public class BoardView extends View {
     private final int shipMissColor = Color.GREEN;
 
     private final Paint boardPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
     {
         boardPaint.setColor(boardColor);
     }
 
     private final Paint boardLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
     {
         boardLinePaint.setColor(boardLineColor);
         boardLinePaint.setStrokeWidth(2);
     }
 
     private final Paint shipHitPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
     {
         shipHitPaint.setColor(shipHitColor);
         shipHitPaint.setStrokeWidth(1);
     }
 
     private final Paint shipMissPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
     {
         shipMissPaint.setColor(shipMissColor);
         shipMissPaint.setStrokeWidth(1);
@@ -50,11 +54,17 @@ public class BoardView extends View {
     public BoardView(Context context) {
         super(context);
     }
+
     public BoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
+
     public BoardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
+
+    public Board getBoard(){
+        return board;
     }
 
     public void setBoard(Board board) {

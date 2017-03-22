@@ -1,5 +1,6 @@
 package edu.utep.cs.cs4330.battleship;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -10,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import com.google.gson.Gson;
 
 import org.w3c.dom.Text;
 
@@ -89,6 +92,13 @@ public class DeploymentActivity extends AppCompatActivity implements DeploymentB
         boardView.onCreate();
         updateDeployStatus();
         checkReady();
+    }
+
+    public void onClickDeploy(View v){
+        Intent i = new Intent(this, GameActivity.class);
+        i.putExtra("BOARD", new Gson().toJson(boardView.getBoard()));
+        i.putExtra("STRATEGY", strategy);
+        startActivity(i);
     }
 
     @Override

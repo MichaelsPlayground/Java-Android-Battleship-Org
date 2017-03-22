@@ -13,22 +13,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Switch;
 import android.widget.TextView;
+
+import com.google.gson.Gson;
 
 public class GameActivity extends AppCompatActivity {
     // Views
     private BoardView boardView;
-    private TextView textShots;
-    private TextView textSunk;
-    private Button btnNew;
+    private Switch switchSound;
 
     // Models
     private Board board;
-
-    private final int TOTAL_SHIPS = 5;
-    private int shotCount = 0;
-    private int sunkCount = 0;
-
     private boolean isSoundEnabled = true;
 
     @Override
@@ -39,8 +35,9 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.menuitem_sound)
+        if(item.getItemId() == R.id.menuitem_sound) {
             isSoundEnabled = !isSoundEnabled;
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -48,63 +45,30 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("Debug", "Created");
         setContentView(R.layout.activity_game);
 
         boardView = (BoardView) findViewById(R.id.boardView);
-        textShots = (TextView) findViewById(R.id.txtShots);
-        textSunk = (TextView) findViewById(R.id.textSunk);
-        btnNew = (Button) findViewById(R.id.btnNew);
-        reset();
+        switchSound = (Switch) findViewById(R.id.switchSound);
+        //reset();
 
-        //if (!savedInstanceState.isEmpty()) {
-            //shotCount = savedInstanceState.getInt("shots");
-            //sunkCount = savedInstanceState.getInt("sunks");
-        //}
+        Bundle extras = getIntent().getExtras();
+        if(extras == null)
+            return;
+
+        String jsonMyObject;
+        jsonMyObject = extras.getString("BOARD");
+        if(jsonMyObject != null) {
+            Board b = new Gson().fromJson(jsonMyObject, Board.class);
+            boardView.setBoard(b);
+        }
+
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        //outState.putInt("shots", shotCount);
-        //outState.putInt("sunks", sunkCount);
         super.onSaveInstanceState(outState);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d("Debug", "---=== Started");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d("Debug", "Resumed");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d("Debug", "Paused");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d("Debug", "Stopped");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d("Debug", "Destroyed");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.d("Debug", "Restarted");
-    }
 
     public void onNewButton(View v) {
         new AlertDialog.Builder(this)
@@ -124,10 +88,6 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void reset() {
-        shotCount = 0;
-        sunkCount = 0;
-        updateShotCounter();
-        updateSunkCounter();
 
         board = new Board(10);
         Log.d("Cheat", board.boardToString());
@@ -135,48 +95,15 @@ public class GameActivity extends AppCompatActivity {
         board.addBoardListener(new Board.BoardListener() {
             @Override
             public void onShipHit(Ship ship) {
-                shotCount++;
 
-                if(isSoundEnabled) {
-                    MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.hit);
-                    mp.start();
-                }
-
-                if (ship.isDestroyed()) {
-                    if(isSoundEnabled) {
-                        MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.sink);
-                        mp.start();
-                    }
-                    sunkCount++;
-                }
-
-                if (sunkCount == TOTAL_SHIPS) {
-                    if(isSoundEnabled) {
-                        MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.gameover);
-                        mp.start();
-                    }
-                }
-
-
-                updateSunkCounter();
-                updateShotCounter();
             }
 
             @Override
             public void onShipMiss() {
-                shotCount++;
-                updateShotCounter();
+
             }
         });
         boardView.setBoard(board);
-    }
-
-    private void updateShotCounter() {
-        textShots.setText(getString(R.string.num_shots) + shotCount);
-    }
-
-    private void updateSunkCounter() {
-        textSunk.setText(getString(R.string.num_sunk_ships) + sunkCount);
     }
 
 }

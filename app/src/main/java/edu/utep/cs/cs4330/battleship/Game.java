@@ -33,5 +33,7 @@ public class Game {
         // You hit and are not allowed multiple hits
         if(isHit && !p.isAllowedMultipleShots)
             nextTurn();
+
+        return false;
     }
 }
