@@ -21,4 +21,7 @@ public class MainMenuActivity extends AppCompatActivity {
         i.putExtra(getString(R.string.main_menu_intent_gamemode), getString(R.string.main_menu_singleplayer_description));
         startActivity(i);
     }
+
+
+
 }
