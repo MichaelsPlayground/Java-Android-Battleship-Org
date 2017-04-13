@@ -7,18 +7,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import edu.utep.cs.cs4330.battleship.R;
+import edu.utep.cs.cs4330.battleship.model.GameType;
 
 public class MainMenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Add fade transitions
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_main_menu);
     }
 
     public void onClickSinglePlayer(View v) {
         Intent i = new Intent(this, DeploymentActivity.class);
-        i.putExtra(getString(R.string.main_menu_intent_gamemode), getString(R.string.main_menu_singleplayer_description));
+        i.putExtra(getString(R.string.main_menu_intent_gamemode), GameType.Singleplayer);
+        startActivity(i);
+    }
+
+    public void onClickMultiPlayer(View view){
+        Intent i = new Intent(this, DeploymentActivity.class);
+        i.putExtra(getString(R.string.main_menu_intent_gamemode), GameType.Multiplayer);
         startActivity(i);
     }
 

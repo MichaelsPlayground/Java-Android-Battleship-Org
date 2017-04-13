@@ -3,6 +3,8 @@ package edu.utep.cs.cs4330.battleship.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -14,8 +16,11 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
+import edu.utep.cs.cs4330.battleship.DeployAIFragment;
+import edu.utep.cs.cs4330.battleship.DeployMultiFragment;
 import edu.utep.cs.cs4330.battleship.R;
 import edu.utep.cs.cs4330.battleship.ai.StrategyType;
+import edu.utep.cs.cs4330.battleship.model.GameType;
 import edu.utep.cs.cs4330.battleship.model.Ship;
 import edu.utep.cs.cs4330.battleship.view.DeploymentBoardView;
 
@@ -28,7 +33,11 @@ public class DeploymentActivity extends AppCompatActivity implements DeploymentB
     private RadioGroup radioGroupStrategy;
     private Button buttonDeploy;
 
-    private StrategyType strategyAI;
+    private GameType gameType;
+
+
+    private Fragment fragmentDeployment;
+    private boolean isFragmentReady = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +54,23 @@ public class DeploymentActivity extends AppCompatActivity implements DeploymentB
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            String gamemode = extras.getString(getString(R.string.main_menu_intent_gamemode));
-            if (gamemode != null)
-                textGamemode.setText(gamemode);
+            gameType = (GameType)extras.get(getString(R.string.main_menu_intent_gamemode));
+
+            Fragment newFragment;
+
+            if(gameType == GameType.Singleplayer){
+                textGamemode.setText(getString(R.string.main_menu_singleplayer_description));
+                newFragment = (Fragment)new DeployAIFragment();
+            }
+            else{
+                textGamemode.setText(getString(R.string.main_menu_multiplayer_description));
+                newFragment = (Fragment)new DeployMultiFragment();
+            }
+
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.add(R.id.fragmentDeploy, newFragment);
+            transaction.commit();
+
         }
 
         boardViewDeployment.addListener(this);
@@ -56,18 +79,6 @@ public class DeploymentActivity extends AppCompatActivity implements DeploymentB
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 boardViewDeployment.rotationMode = isChecked;
-            }
-        });
-
-        radioGroupStrategy.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.radioRandom)
-                    strategyAI = StrategyType.Random;
-                else if (checkedId == R.id.radioSweep)
-                    strategyAI = StrategyType.Sweep;
-
-                checkReady();
             }
         });
 
@@ -90,9 +101,15 @@ public class DeploymentActivity extends AppCompatActivity implements DeploymentB
         checkReady();
     }
 
+    public void onFragmentUpdate(boolean isFragmentReady){
+        this.isFragmentReady = isFragmentReady;
+        checkReady();
+    }
+
     public void checkReady() {
         int shipTotal = boardViewDeployment.getRemainingShips();
-        boolean isReady = (shipTotal == 0 && strategyAI != null);
+        boolean isFragmentReady = true;
+        boolean isReady = (shipTotal == 0 && isFragmentReady);
         buttonDeploy.setEnabled(isReady);
     }
 
@@ -105,7 +122,16 @@ public class DeploymentActivity extends AppCompatActivity implements DeploymentB
     public void onClickDeploy(View v) {
         Intent i = new Intent(this, GameActivity.class);
         i.putExtra(getString(R.string.deployment_intent_board), boardViewDeployment.getBoard());
-        i.putExtra(getString(R.string.deployment_intent_strategy), strategyAI);
-        startActivity(i);
+
+        // Singleplayer VS AI game
+        if(gameType == GameType.Singleplayer){
+            // Get the strategy from the fragment
+            DeployAIFragment fragment = (DeployAIFragment)fragmentDeployment;
+            i.putExtra(getString(R.string.deployment_intent_strategy), fragment.strategyAI);
+            startActivity(i);
+        }
+
+        
+
     }
 }

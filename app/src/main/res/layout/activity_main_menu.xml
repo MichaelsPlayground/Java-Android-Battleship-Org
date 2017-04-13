@@ -31,7 +31,14 @@
         android:text="@string/main_menu_btn_single_player"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btnPlayerSingle"
+        android:id="@+id/btnPlaySingle"
         android:onClick="onClickSinglePlayer"
         android:textColor="@android:color/black" />
+
+    <Button
+        android:text="Play Multiplayer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnPlayMulti"
+        android:onClick="onClickMultiPlayer" />
 </LinearLayout>

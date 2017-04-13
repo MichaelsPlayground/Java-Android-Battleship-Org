@@ -1,0 +1,44 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="edu.utep.cs.cs4330.battleship.DeployAIFragment">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:layout_width="150dp">
+
+        <TextView
+            android:text="@string/deployment_strategy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textDepLabel2"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textStyle="normal|bold"
+            android:textColor="@color/colorPrimaryDark" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/radioGroupStrategy">
+
+            <RadioButton
+                android:text="@string/deployment_strategy_random"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/radioRandom"
+                android:layout_weight="1" />
+
+            <RadioButton
+                android:text="@string/deployment_strategy_sweep"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/radioSweep"
+                android:layout_weight="1" />
+        </RadioGroup>
+
+    </LinearLayout>
+</LinearLayout>
