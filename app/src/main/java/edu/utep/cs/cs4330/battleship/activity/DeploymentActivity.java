@@ -2,7 +2,11 @@
 package edu.utep.cs.cs4330.battleship.activity;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,18 +21,16 @@ import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.gson.Gson;
 
 import edu.utep.cs.cs4330.battleship.AcceptThread;
+import edu.utep.cs.cs4330.battleship.ClientThread;
 import edu.utep.cs.cs4330.battleship.ConnectedThread;
 import edu.utep.cs.cs4330.battleship.DeployAIFragment;
 import edu.utep.cs.cs4330.battleship.DeployMultiFragment;
 import edu.utep.cs.cs4330.battleship.MessageConstants;
 import edu.utep.cs.cs4330.battleship.NetworkType;
+import edu.utep.cs.cs4330.battleship.Packet;
 import edu.utep.cs.cs4330.battleship.R;
-import edu.utep.cs.cs4330.battleship.ai.StrategyType;
 import edu.utep.cs.cs4330.battleship.model.GameType;
 import edu.utep.cs.cs4330.battleship.model.Ship;
 import edu.utep.cs.cs4330.battleship.view.DeploymentBoardView;
@@ -130,8 +132,10 @@ public class DeploymentActivity extends AppCompatActivity implements DeploymentB
 
     private BluetoothAdapter bluetoothAdapter;
     private int REQUEST_DISCOVER = 15;
+    private int REQUEST_ENABLE_BT = 7;
+
     public void onClickDeploy(View v) {
-        Intent i = new Intent(this, GameActivity.class);
+        Intent i = new Intent(this, AIGameActivity.class);
         i.putExtra(getString(R.string.deployment_intent_board), boardViewDeployment.getBoard());
 
         // Single-player VS AI game
@@ -158,20 +162,50 @@ public class DeploymentActivity extends AppCompatActivity implements DeploymentB
             }
             // Client
             else{
+                if (!bluetoothAdapter.isEnabled()) {
+                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 
+                    IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+                    registerReceiver(mReceiver, filter);
+
+                    progressBarDeploy.setIndeterminate(true);
+                    textDeployProgress.setText("Looking for host");
+                }
             }
         }
-
-
     }
+
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                // Discovery has found a device. Get the BluetoothDevice
+                // object and its info from the Intent.
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                String deviceName = device.getName();
+                String deviceHardwareAddress = device.getAddress(); // MAC address
+                new ClientThread(device).start();
+                ConnectedThread.setHandler(connectedHandler);
+                progressBarDeploy.setIndeterminate(false);
+                textDeployProgress.setText("Waiting for handshake");
+            }
+        }
+    };
 
     private Handler connectedHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             if(msg.what == MessageConstants.MESSAGE_CONNECTED){
-                Log.d("Debug", "Game to start now!");
-                progressBarDeploy.setIndeterminate(false);
-                textDeployProgress.setText("Connected!");
+                DeployMultiFragment fragment = (DeployMultiFragment)fragmentDeployment;
+                NetworkType networkType = fragment.networkType;
+                if(networkType == NetworkType.Client){
+                    ConnectedThread.addPacket(Packet.createPacketClientHandshake(""));
+                }
+            }
+            else if(msg.what == MessageConstants.MESSAGE_RECEIVE){
+                Packet p = (Packet)msg.obj;
+                Log.d("Debug", "Received packet ID: " + p.getID());
             }
         }
     };
@@ -182,7 +216,7 @@ public class DeploymentActivity extends AppCompatActivity implements DeploymentB
 
         if(requestCode == REQUEST_DISCOVER){
             if(resultCode == 300){
-                Thread accept = new AcceptThread(this, connectedHandler, bluetoothAdapter);
+                Thread accept = new AcceptThread(this);
                 accept.start();
                 ConnectedThread.setHandler(connectedHandler);
             }
@@ -191,5 +225,20 @@ public class DeploymentActivity extends AppCompatActivity implements DeploymentB
                 textDeployProgress.setText("Waiting for deployment");
             }
         }
+        else if(requestCode == REQUEST_ENABLE_BT){
+            if(resultCode == RESULT_OK)
+                bluetoothAdapter.startDiscovery();
+
+            else{
+                progressBarDeploy.setIndeterminate(false);
+                textDeployProgress.setText("Waiting for deployment");
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mReceiver);
     }
 }

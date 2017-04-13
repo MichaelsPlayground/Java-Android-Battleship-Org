@@ -11,19 +11,24 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConnectedThread extends Thread {
     private static Handler mHandler;
-
     public static void setHandler(Handler newHandler){
         mHandler = newHandler;
+    }
+    private static List<Packet> packetList = new ArrayList<>();
+
+    public static synchronized void addPacket(Packet p){
+        packetList.add(p);
     }
 
     private static final String TAG = "DEBUG";
     private final BluetoothSocket mmSocket;
     private final DataInputStream mmInStream;
     private final DataOutputStream mmOutStream;
-    private byte[] mmBuffer; // mmBuffer store for the stream
 
     public ConnectedThread(BluetoothSocket socket) {
         mmSocket = socket;
@@ -50,19 +55,24 @@ public class ConnectedThread extends Thread {
     }
 
     public void run() {
-        mmBuffer = new byte[1024];
-        int numBytes; // bytes returned from read()
+        //mmBuffer = new byte[1024];
+        //int numBytes; // bytes returned from read()
 
         // Keep listening to the InputStream until an exception occurs.
         while (true) {
             try {
                 // Read from the InputStream.
-                numBytes = mmInStream.read(mmBuffer);
+                Packet packetInput = Packet.readPacket(mmInStream);
                 // Send the obtained bytes to the UI activity.
                 Message readMsg = mHandler.obtainMessage(
-                        MessageConstants.MESSAGE_RECEIVE, numBytes, -1,
-                        mmBuffer);
+                        MessageConstants.MESSAGE_RECEIVE, -1, -1,
+                        packetInput);
                 readMsg.sendToTarget();
+
+                for(Packet p : packetList){
+                    write(p);
+                }
+
             } catch (IOException e) {
                 Log.d(TAG, "Input stream was disconnected", e);
                 break;
@@ -71,9 +81,9 @@ public class ConnectedThread extends Thread {
     }
 
     // Call this from the main activity to send data to the remote device.
-    public void write(byte[] bytes) {
+    private void write(Packet p) {
         try {
-            mmOutStream.write(bytes);
+            p.sendPacket(mmOutStream);
         } catch (IOException e) {
             Log.e(TAG, "Error occurred when sending data", e);
         }

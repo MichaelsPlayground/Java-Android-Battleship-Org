@@ -12,14 +12,10 @@ import java.util.UUID;
 
 public class AcceptThread extends Thread {
     private final BluetoothServerSocket mmServerSocket;
-    private Context context;
-    private Handler connectedHandler;
     private BluetoothAdapter bluetoothAdapter;
 
-    public AcceptThread(Context context, Handler connectedHandler, BluetoothAdapter bluetoothAdapter) {
-        this.context = context;
-        this.connectedHandler = connectedHandler;
-        this.bluetoothAdapter = bluetoothAdapter;
+    public AcceptThread(Context context) {
+        this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         // Use a temporary object that is later assigned to mmServerSocket
         // because mmServerSocket is final.
         BluetoothServerSocket tmp = null;
@@ -33,7 +29,7 @@ public class AcceptThread extends Thread {
     }
 
     public void run() {
-        BluetoothSocket socket = null;
+        BluetoothSocket socket;
         // Keep listening until exception occurs or a socket is returned.
         while (true) {
             try {

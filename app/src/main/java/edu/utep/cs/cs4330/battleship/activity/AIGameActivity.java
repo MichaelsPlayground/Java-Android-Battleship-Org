@@ -25,11 +25,9 @@ import edu.utep.cs.cs4330.battleship.model.Ship;
 import edu.utep.cs.cs4330.battleship.util.Vector2;
 import edu.utep.cs.cs4330.battleship.view.BoardView;
 
-public class GameActivity extends AppCompatActivity implements BattleshipGame.GameListener {
+public class AIGameActivity extends AppCompatActivity implements BattleshipGame.GameListener {
 
-    private enum Sound {Hit, Sink, Gameover}
-
-    ;
+    private enum Sound {Hit, Sink, Gameover};
     private static final boolean isAIAllowedMultipleShots = true;
     private boolean isSoundEnabled = true;
 
@@ -91,7 +89,7 @@ public class GameActivity extends AppCompatActivity implements BattleshipGame.Ga
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        setContentView(R.layout.activity_game);
+        setContentView(R.layout.activity_ai_game);
 
         // Get the necessary views
         boardViewDeployed = (BoardView) findViewById(R.id.board_view_small);
