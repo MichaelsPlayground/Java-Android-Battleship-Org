@@ -1,6 +1,7 @@
 <resources>
 
     <string name="app_name">Battleship</string>
+    <string name="app_uuid">d3913c42-6128-4427-9674-6374f2690ebf</string>
 
     <!-- Main Menu Activity -->
     <string name="main_menu">Main Menu</string>
@@ -24,8 +25,8 @@
     <string name="deployment_intent_strategy">Strategy</string>
 
     <!-- Game Activity -->
-    <string name="game_own_board">Your ships</string>
-    <string name="game_opponent_board">Your opponent</string>
+    <string name="game_own_board">Deployed Troops</string>
+    <string name="game_opponent_board">Find The Enemy Ships!</string>
     <string name="game_turn">Turn:</string>
     <string name="game_turn_player">Yours</string>
     <string name="game_turn_ai">AI</string>
