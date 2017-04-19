@@ -1,8 +1,17 @@
+// Author: Jose Perez <josegperez@mail.com> and Diego Reynoso
 package edu.utep.cs.cs4330.battleship.network.packet;
 
-/**
- * Created by xeroj on 018 4 18 2017.
- */
+import java.io.DataOutputStream;
+import java.io.IOException;
 
-public class PacketRestartRequest {
+public class PacketRestartRequest extends Packet {
+
+    public PacketRestartRequest() {
+        super(PacketID.RESTART_REQUEST);
+    }
+
+    @Override
+    public void sendPacket(DataOutputStream output) throws IOException {
+
+    }
 }

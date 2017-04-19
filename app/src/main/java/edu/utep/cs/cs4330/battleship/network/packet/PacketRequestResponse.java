@@ -1,8 +1,25 @@
+// Author: Jose Perez <josegperez@mail.com> and Diego Reynoso
 package edu.utep.cs.cs4330.battleship.network.packet;
 
-/**
- * Created by xeroj on 018 4 18 2017.
- */
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
-public class PacketRequestResponse {
+public class PacketRequestResponse extends Packet {
+    public boolean isAgreed;
+
+    public PacketRequestResponse(DataInputStream input) throws IOException{
+        super(PacketID.REQUEST_RESPONSE);
+        isAgreed = input.readBoolean();
+    }
+
+    public PacketRequestResponse(boolean isAgreed) {
+        super(PacketID.REQUEST_RESPONSE);
+        this.isAgreed = isAgreed;
+    }
+
+    @Override
+    public void sendPacket(DataOutputStream output) throws IOException {
+        output.writeBoolean(isAgreed);
+    }
 }

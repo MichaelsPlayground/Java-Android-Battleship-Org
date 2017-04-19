@@ -12,12 +12,12 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import edu.utep.cs.cs4330.battleship.fragment.DeployAIFragment;
-import edu.utep.cs.cs4330.battleship.fragment.DeployMultiFragment;
-import edu.utep.cs.cs4330.battleship.network.NetworkAdapterType;
 import edu.utep.cs.cs4330.battleship.R;
+import edu.utep.cs.cs4330.battleship.fragment.DeployAIFragment;
+import edu.utep.cs.cs4330.battleship.fragment.DeployNetworkFragment;
 import edu.utep.cs.cs4330.battleship.model.GameType;
 import edu.utep.cs.cs4330.battleship.model.board.Ship;
+import edu.utep.cs.cs4330.battleship.network.NetworkAdapterType;
 import edu.utep.cs.cs4330.battleship.view.DeploymentBoardView;
 
 public class DeploymentActivity extends AppCompatActivity implements DeploymentBoardView.DeploymentListener {
@@ -56,7 +56,7 @@ public class DeploymentActivity extends AppCompatActivity implements DeploymentB
             }
             else{
                 textGamemode.setText(getString(R.string.main_menu_multiplayer_description));
-                newFragment = new DeployMultiFragment();
+                newFragment = new DeployNetworkFragment();
             }
 
             // Add Fragment to UI
@@ -130,7 +130,7 @@ public class DeploymentActivity extends AppCompatActivity implements DeploymentB
         }
         // Multi-player VS Human game
         else {
-            DeployMultiFragment fragment = (DeployMultiFragment) fragmentDeployment;
+            DeployNetworkFragment fragment = (DeployNetworkFragment) fragmentDeployment;
             NetworkAdapterType networkType = fragment.networkAdapterType;
 
             if(networkType == NetworkAdapterType.Bluetooth){

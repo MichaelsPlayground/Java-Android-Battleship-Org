@@ -1,3 +1,4 @@
+// Author: Jose Perez <josegperez@mail.com> and Diego Reynoso
 package edu.utep.cs.cs4330.battleship.network.thread;
 
 import android.bluetooth.BluetoothAdapter;
@@ -41,7 +42,7 @@ public class ClientThread extends Thread {
         manageMyConnectedSocket(mmSocket);
     }
 
-    public void manageMyConnectedSocket(BluetoothSocket socket){
+    public void manageMyConnectedSocket(BluetoothSocket socket) {
         new ReceivingThread(socket).start();
         new SendingThread(socket).start();
     }

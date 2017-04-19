@@ -1,3 +1,4 @@
+// Author: Jose Perez <josegperez@mail.com> and Diego Reynoso
 package edu.utep.cs.cs4330.battleship.network.thread;
 
 import android.bluetooth.BluetoothSocket;
@@ -11,11 +12,9 @@ import edu.utep.cs.cs4330.battleship.network.packet.Packet;
 
 public class ReceivingThread extends Thread {
     private static final String TAG = "Debug";
-    private final BluetoothSocket mmSocket;
     private final DataInputStream mmInStream;
 
     public ReceivingThread(BluetoothSocket socket) {
-        mmSocket = socket;
         DataInputStream tmpIn = null;
 
         try {
@@ -44,6 +43,4 @@ public class ReceivingThread extends Thread {
             }
         }
     }
-
-
 }

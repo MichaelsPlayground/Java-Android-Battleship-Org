@@ -1,3 +1,4 @@
+// Author: Jose Perez <josegperez@mail.com> and Diego Reynoso
 package edu.utep.cs.cs4330.battleship.fragment;
 
 import android.Manifest;
@@ -52,9 +53,9 @@ public class NetworkClientFragment extends Fragment implements NetworkInterface 
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_network_client, container, false);
 
-        textClientStatus = (TextView)view.findViewById(R.id.textClientStatus);
-        progressBarClient = (ProgressBar)view.findViewById(R.id.progressBarClient);
-        btnClient = (Button)view.findViewById(R.id.btnClient);
+        textClientStatus = (TextView) view.findViewById(R.id.textClientStatus);
+        progressBarClient = (ProgressBar) view.findViewById(R.id.progressBarClient);
+        btnClient = (Button) view.findViewById(R.id.btnClient);
         btnClient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,44 +95,42 @@ public class NetworkClientFragment extends Fragment implements NetworkInterface 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == REQUEST_ENABLE_BT){
+        if (requestCode == REQUEST_ENABLE_BT) {
             // We got permission
-            if(resultCode == RESULT_OK)
+            if (resultCode == RESULT_OK)
                 onBluetoothEnabled(false);
             else
                 reset();
         }
     }
 
-    public void onClickBtnClient(){
+    public void onClickBtnClient() {
         // Check if Bluetooth is enabled
-        if(!bluetoothAdapter.isEnabled()){
+        if (!bluetoothAdapter.isEnabled()) {
             // It isn't. Ask the user to enable it
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             textClientStatus.setText("Enabling bluetooth");
             progressBarClient.setIndeterminate(true);
-        }
-        else
+        } else
             onBluetoothEnabled(false);
     }
 
 
-    public void onBluetoothEnabled(boolean overridePermission){
+    public void onBluetoothEnabled(boolean overridePermission) {
         // Check permissions (required for > 6.0)
         boolean hasPerm = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED;
 
         // Start looking for device if we have permission
-        if(overridePermission || hasPerm) {
+        if (overridePermission || hasPerm) {
             // Start looking for devices
             bluetoothAdapter.startDiscovery();
 
             progressBarClient.setIndeterminate(true);
             textClientStatus.setText("Looking for host");
             btnClient.setEnabled(false);
-        }
-        else{
+        } else {
             // No permission so request it
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
@@ -141,7 +140,7 @@ public class NetworkClientFragment extends Fragment implements NetworkInterface 
         }
     }
 
-    public void reset(){
+    public void reset() {
         textClientStatus.setText("Ready to connect");
         btnClient.setEnabled(true);
         progressBarClient.setIndeterminate(false);

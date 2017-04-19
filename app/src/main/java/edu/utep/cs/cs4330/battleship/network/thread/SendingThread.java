@@ -1,3 +1,4 @@
+// Author: Jose Perez <josegperez@mail.com> and Diego Reynoso
 package edu.utep.cs.cs4330.battleship.network.thread;
 
 import android.bluetooth.BluetoothSocket;
@@ -17,7 +18,7 @@ public class SendingThread extends Thread {
     private final DataOutputStream mmOutStream;
     private final List<Packet> packetList;
 
-    public SendingThread(BluetoothSocket socket){
+    public SendingThread(BluetoothSocket socket) {
         DataOutputStream tmpOut = null;
         try {
             tmpOut = new DataOutputStream(socket.getOutputStream());
@@ -33,19 +34,20 @@ public class SendingThread extends Thread {
 
     @Override
     public void run() {
-        while(true){
-            for(Packet p : packetList)
+        while (true) {
+            for (Packet p : packetList)
                 write(p);
         }
     }
 
 
-    public synchronized void addPacket(Packet p){
+    public synchronized void addPacket(Packet p) {
         packetList.add(p);
     }
 
     private void write(Packet p) {
         try {
+            mmOutStream.writeInt(p.ID);
             p.sendPacket(mmOutStream);
         } catch (IOException e) {
             Log.e(TAG, "Error occurred when sending data", e);

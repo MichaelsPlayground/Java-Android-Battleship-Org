@@ -1,8 +1,27 @@
+// Author: Jose Perez <josegperez@mail.com> and Diego Reynoso
 package edu.utep.cs.cs4330.battleship.network.packet;
 
-/**
- * Created by xeroj on 018 4 18 2017.
- */
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
-public class PacketHitResponse {
+import edu.utep.cs.cs4330.battleship.model.ResultType;
+
+public class PacketHitResponse extends Packet {
+    private ResultType resultType;
+
+    public PacketHitResponse(DataInputStream input) throws IOException{
+        super(PacketID.HIT_RESPONSE);
+        resultType = ResultType.fromValue(input.readInt());
+    }
+
+    public PacketHitResponse(ResultType resultType) {
+        super(PacketID.HIT_RESPONSE);
+        this.resultType = resultType;
+    }
+
+    @Override
+    public void sendPacket(DataOutputStream output) throws IOException {
+        output.writeInt(resultType.value);
+    }
 }
