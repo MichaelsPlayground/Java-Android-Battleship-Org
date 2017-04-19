@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="edu.utep.cs.cs4330.battleship.DeployAIFragment">
+    tools:context="edu.utep.cs.cs4330.battleship.fragment.DeployAIFragment">
 
     <LinearLayout
         android:orientation="vertical"
@@ -11,14 +11,14 @@
         android:layout_width="150dp">
 
         <TextView
-            android:text="What will you be?"
+            android:id="@+id/textDepMultiLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textDepMultiLabel"
+            android:text="Network Type"
             android:textAlignment="center"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="18sp"
-            android:textStyle="normal|bold"
-            android:textColor="@color/colorPrimaryDark" />
+            android:textStyle="normal|bold" />
 
         <RadioGroup
             android:layout_width="match_parent"
@@ -26,18 +26,19 @@
             android:id="@+id/radioGroupNetwork">
 
             <RadioButton
-                android:text="Host"
+                android:id="@+id/radioBluetooth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/radioHost"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="Bluetooth" />
 
             <RadioButton
-                android:text="Client"
+                android:id="@+id/radioWifi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/radioClient"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:enabled="false"
+                android:text="WiFi" />
         </RadioGroup>
 
     </LinearLayout>

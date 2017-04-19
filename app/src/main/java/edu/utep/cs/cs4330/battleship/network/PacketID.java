@@ -1,4 +1,4 @@
-package edu.utep.cs.cs4330.battleship;
+package edu.utep.cs.cs4330.battleship.network;
 
 public class PacketID {
     private PacketID() { }

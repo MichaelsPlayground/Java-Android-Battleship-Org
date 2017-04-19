@@ -1,4 +1,4 @@
-package edu.utep.cs.cs4330.battleship;
+package edu.utep.cs.cs4330.battleship.network.thread;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -44,6 +44,6 @@ public class ClientThread extends Thread {
     }
 
     public void manageMyConnectedSocket(BluetoothSocket socket){
-        new ConnectedThread(socket).start();
+        new ReceivingThread(socket).start();
     }
 }
