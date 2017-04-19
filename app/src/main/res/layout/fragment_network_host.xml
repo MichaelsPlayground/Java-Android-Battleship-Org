@@ -10,7 +10,7 @@
         android:id="@+id/textHostStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text="Status"
         android:textAlignment="center"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="30sp" />
@@ -25,6 +25,5 @@
         android:id="@+id/btnHost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="onClickBtnHost"
         android:text="Host" />
 </LinearLayout>

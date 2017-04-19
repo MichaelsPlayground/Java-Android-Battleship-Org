@@ -39,11 +39,11 @@ public class HostThread extends Thread {
                 Log.e("Debug", "Socket's accept() method failed", e);
                 break;
             }
+            Log.d("Debug", "Client is null");
 
             if (socket != null) {
                 // A connection was accepted. Perform work associated with
                 // the connection in a separate thread.
-
                 manageMyConnectedSocket(socket);
                 try {
                     // Stop listening for clients to connect

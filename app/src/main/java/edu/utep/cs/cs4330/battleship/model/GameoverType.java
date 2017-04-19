@@ -1,4 +1,4 @@
-package edu.utep.cs.cs4330.battleship.network;
+package edu.utep.cs.cs4330.battleship.model;
 
 public class GameoverType {
     public static int HostWin = 1;

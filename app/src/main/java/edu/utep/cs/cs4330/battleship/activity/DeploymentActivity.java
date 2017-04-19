@@ -17,7 +17,7 @@ import edu.utep.cs.cs4330.battleship.fragment.DeployMultiFragment;
 import edu.utep.cs.cs4330.battleship.network.NetworkAdapterType;
 import edu.utep.cs.cs4330.battleship.R;
 import edu.utep.cs.cs4330.battleship.model.GameType;
-import edu.utep.cs.cs4330.battleship.model.Ship;
+import edu.utep.cs.cs4330.battleship.model.board.Ship;
 import edu.utep.cs.cs4330.battleship.view.DeploymentBoardView;
 
 public class DeploymentActivity extends AppCompatActivity implements DeploymentBoardView.DeploymentListener {
@@ -48,18 +48,27 @@ public class DeploymentActivity extends AppCompatActivity implements DeploymentB
         if (extras != null) {
             gameType = (GameType)extras.get(getString(R.string.main_menu_intent_gamemode));
 
+            Fragment newFragment;
+
             if(gameType == GameType.Singleplayer){
                 textGamemode.setText(getString(R.string.main_menu_singleplayer_description));
-                fragmentDeployment = new DeployAIFragment();
+                newFragment = new DeployAIFragment();
             }
             else{
                 textGamemode.setText(getString(R.string.main_menu_multiplayer_description));
-                fragmentDeployment = new DeployMultiFragment();
+                newFragment = new DeployMultiFragment();
             }
 
             // Add Fragment to UI
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(R.id.fragment_container, fragmentDeployment);
+            if(fragmentDeployment == null){
+                transaction.add(R.id.fragment_container, newFragment);
+            }
+            else{
+                transaction.replace(R.id.fragment_container, newFragment);
+            }
+
+            fragmentDeployment = newFragment;
             transaction.commit();
 
         }

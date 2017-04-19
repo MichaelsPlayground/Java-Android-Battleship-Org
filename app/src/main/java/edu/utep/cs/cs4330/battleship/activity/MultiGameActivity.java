@@ -17,12 +17,10 @@ import android.widget.TextView;
 
 import edu.utep.cs.cs4330.battleship.R;
 import edu.utep.cs.cs4330.battleship.ai.AIPlayer;
-import edu.utep.cs.cs4330.battleship.ai.Strategy;
-import edu.utep.cs.cs4330.battleship.ai.StrategyType;
-import edu.utep.cs.cs4330.battleship.model.BattleshipGame;
-import edu.utep.cs.cs4330.battleship.model.Board;
-import edu.utep.cs.cs4330.battleship.model.Player;
-import edu.utep.cs.cs4330.battleship.model.Ship;
+import edu.utep.cs.cs4330.battleship.model.game.BattleshipGame;
+import edu.utep.cs.cs4330.battleship.model.board.Board;
+import edu.utep.cs.cs4330.battleship.model.game.Player;
+import edu.utep.cs.cs4330.battleship.model.board.Ship;
 import edu.utep.cs.cs4330.battleship.util.Vector2;
 import edu.utep.cs.cs4330.battleship.view.BoardView;
 

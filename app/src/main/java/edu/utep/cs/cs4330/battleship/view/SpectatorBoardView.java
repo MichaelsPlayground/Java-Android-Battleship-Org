@@ -5,7 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 
-import edu.utep.cs.cs4330.battleship.model.Place;
+import edu.utep.cs.cs4330.battleship.model.board.Place;
 
 public class SpectatorBoardView extends BoardView {
     public SpectatorBoardView(Context context) {

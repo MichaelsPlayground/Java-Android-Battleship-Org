@@ -1,7 +1,7 @@
 // Author: Jose Perez <josegperez@mail.com> and Diego Reynoso
 package edu.utep.cs.cs4330.battleship.ai;
 
-import edu.utep.cs.cs4330.battleship.model.Board;
+import edu.utep.cs.cs4330.battleship.model.board.Board;
 import edu.utep.cs.cs4330.battleship.util.Vector2;
 
 

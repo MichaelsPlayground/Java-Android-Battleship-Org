@@ -1,5 +1,7 @@
 package edu.utep.cs.cs4330.battleship.fragment;
 
+import android.bluetooth.BluetoothA2dp;
+import android.bluetooth.BluetoothAdapter;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
@@ -25,6 +27,9 @@ public class DeployMultiFragment extends Fragment implements RadioGroup.OnChecke
 
         radioGroupNetwork = (RadioGroup) view.findViewById(R.id.radioGroupNetwork);
         radioGroupNetwork.setOnCheckedChangeListener(this);
+
+        if(BluetoothAdapter.getDefaultAdapter() == null)
+            view.findViewById(R.id.radioBluetooth).setEnabled(false);
 
         return view;
     }

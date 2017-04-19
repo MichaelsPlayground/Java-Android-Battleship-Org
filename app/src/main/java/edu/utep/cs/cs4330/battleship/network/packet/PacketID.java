@@ -1,6 +1,6 @@
-package edu.utep.cs.cs4330.battleship.network;
+package edu.utep.cs.cs4330.battleship.network.packet;
 
-public class PacketID {
+class PacketID {
     private PacketID() { }
 
     public static final int HOST_HANDSHAKE = 0;

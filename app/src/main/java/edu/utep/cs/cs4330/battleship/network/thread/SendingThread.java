@@ -10,7 +10,7 @@ import java.util.List;
 
 import edu.utep.cs.cs4330.battleship.network.NetworkConnection;
 import edu.utep.cs.cs4330.battleship.network.NetworkManager;
-import edu.utep.cs.cs4330.battleship.network.Packet;
+import edu.utep.cs.cs4330.battleship.network.packet.Packet;
 
 public class SendingThread extends Thread {
     private static final String TAG = "Debug";

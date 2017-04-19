@@ -9,9 +9,9 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import edu.utep.cs.cs4330.battleship.model.Board;
-import edu.utep.cs.cs4330.battleship.model.Place;
-import edu.utep.cs.cs4330.battleship.model.Ship;
+import edu.utep.cs.cs4330.battleship.model.board.Board;
+import edu.utep.cs.cs4330.battleship.model.board.Place;
+import edu.utep.cs.cs4330.battleship.model.board.Ship;
 
 /**
  * A special view class to display a battleship board as a2D grid.

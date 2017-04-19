@@ -8,10 +8,10 @@ import android.util.AttributeSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.utep.cs.cs4330.battleship.model.Board;
-import edu.utep.cs.cs4330.battleship.model.Direction;
-import edu.utep.cs.cs4330.battleship.model.Place;
-import edu.utep.cs.cs4330.battleship.model.Ship;
+import edu.utep.cs.cs4330.battleship.model.board.Board;
+import edu.utep.cs.cs4330.battleship.model.board.Direction;
+import edu.utep.cs.cs4330.battleship.model.board.Place;
+import edu.utep.cs.cs4330.battleship.model.board.Ship;
 import edu.utep.cs.cs4330.battleship.util.Vector2;
 
 public class DeploymentBoardView extends SpectatorBoardView {

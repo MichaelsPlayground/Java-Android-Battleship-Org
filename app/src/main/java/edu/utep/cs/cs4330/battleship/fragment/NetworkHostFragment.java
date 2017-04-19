@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,31 +12,33 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.Random;
+
 import edu.utep.cs.cs4330.battleship.R;
 import edu.utep.cs.cs4330.battleship.network.NetworkConnection;
 import edu.utep.cs.cs4330.battleship.network.NetworkInterface;
 import edu.utep.cs.cs4330.battleship.network.NetworkManager;
-import edu.utep.cs.cs4330.battleship.network.Packet;
+import edu.utep.cs.cs4330.battleship.network.packet.Packet;
+import edu.utep.cs.cs4330.battleship.network.packet.PacketClientHandshake;
+import edu.utep.cs.cs4330.battleship.network.packet.PacketHostHandshake;
 import edu.utep.cs.cs4330.battleship.network.thread.HostThread;
 
 
 public class NetworkHostFragment extends Fragment implements NetworkInterface {
     private static final int REQUEST_DISCOVER = 2;
 
-    private BluetoothAdapter bluetoothAdapter;
-
     private TextView textHostStatus;
     private ProgressBar progressBarHost;
     private Button btnHost;
+
+    private NetworkConnection networkConnection;
 
     public NetworkHostFragment() { }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-        NetworkManager.registerNetworkInterface(this);
+        NetworkManager.registerNetworkInterface(getActivity(), this);
     }
 
     @Override
@@ -49,6 +52,12 @@ public class NetworkHostFragment extends Fragment implements NetworkInterface {
         textHostStatus = (TextView)view.findViewById(R.id.textHostStatus);
         progressBarHost = (ProgressBar)view.findViewById(R.id.progressBarHost);
         btnHost = (Button)view.findViewById(R.id.btnHost);
+        btnHost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickBtnHost();
+            }
+        });
 
         // Make sure everything is started correctly
         reset();
@@ -62,7 +71,7 @@ public class NetworkHostFragment extends Fragment implements NetworkInterface {
         progressBarHost.setIndeterminate(false);
     }
 
-    public void onClickBtnHost(View view){
+    public void onClickBtnHost(){
         // Request that the device is discoverable
         // This will also request Bluetooth to be enabled
         Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
@@ -90,9 +99,11 @@ public class NetworkHostFragment extends Fragment implements NetworkInterface {
     }
 
     @Override
-    public void onConnect(NetworkConnection networkConnection) {
+    public void onConnect(final NetworkConnection networkConnection) {
         progressBarHost.setIndeterminate(false);
         textHostStatus.setText("Connected with client");
+
+        this.networkConnection = networkConnection;
     }
 
     @Override
@@ -101,8 +112,15 @@ public class NetworkHostFragment extends Fragment implements NetworkInterface {
     }
 
     @Override
-    public void onReceive(Packet p) {
+    public void onReceive(final Packet p) {
+        if(p instanceof PacketClientHandshake){
+            PacketClientHandshake clientHandshake = (PacketClientHandshake)p;
+            Log.d("Debug", "Hey there " + clientHandshake.clientName);
 
+            boolean isClientFirst = new Random(System.nanoTime()).nextBoolean();
+            PacketHostHandshake hostHandshake = new PacketHostHandshake("Host", isClientFirst);
+            networkConnection.sendPacket(hostHandshake);
+        }
     }
 }
 

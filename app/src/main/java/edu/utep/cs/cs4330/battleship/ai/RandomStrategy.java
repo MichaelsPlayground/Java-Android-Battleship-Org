@@ -3,8 +3,8 @@ package edu.utep.cs.cs4330.battleship.ai;
 
 import java.util.Random;
 
-import edu.utep.cs.cs4330.battleship.model.Board;
-import edu.utep.cs.cs4330.battleship.model.Place;
+import edu.utep.cs.cs4330.battleship.model.board.Board;
+import edu.utep.cs.cs4330.battleship.model.board.Place;
 import edu.utep.cs.cs4330.battleship.util.Vector2;
 
 class RandomStrategy extends Strategy {

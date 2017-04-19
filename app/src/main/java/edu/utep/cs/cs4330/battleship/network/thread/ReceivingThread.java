@@ -1,20 +1,13 @@
 package edu.utep.cs.cs4330.battleship.network.thread;
 
 import android.bluetooth.BluetoothSocket;
-import android.net.Network;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-import edu.utep.cs.cs4330.battleship.network.MessageConstants;
 import edu.utep.cs.cs4330.battleship.network.NetworkManager;
-import edu.utep.cs.cs4330.battleship.network.Packet;
+import edu.utep.cs.cs4330.battleship.network.packet.Packet;
 
 public class ReceivingThread extends Thread {
     private static final String TAG = "Debug";

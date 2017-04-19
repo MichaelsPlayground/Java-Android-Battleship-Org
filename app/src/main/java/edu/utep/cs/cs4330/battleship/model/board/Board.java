@@ -1,5 +1,5 @@
 // Author: Jose Perez <josegperez@mail.com> and Diego Reynoso
-package edu.utep.cs.cs4330.battleship.model;
+package edu.utep.cs.cs4330.battleship.model.board;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;

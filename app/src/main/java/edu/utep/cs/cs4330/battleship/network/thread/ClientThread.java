@@ -11,12 +11,10 @@ import java.util.UUID;
 public class ClientThread extends Thread {
     private static String TAG = "Debug";
     private final BluetoothSocket mmSocket;
-    private final BluetoothDevice mmDevice;
     private final BluetoothAdapter bluetoothAdapter;
 
     public ClientThread(BluetoothDevice device) {
         BluetoothSocket tmp = null;
-        mmDevice = device;
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         try {
@@ -45,5 +43,6 @@ public class ClientThread extends Thread {
 
     public void manageMyConnectedSocket(BluetoothSocket socket){
         new ReceivingThread(socket).start();
+        new SendingThread(socket).start();
     }
 }
