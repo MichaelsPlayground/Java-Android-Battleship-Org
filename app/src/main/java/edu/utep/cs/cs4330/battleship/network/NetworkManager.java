@@ -23,12 +23,23 @@ public class NetworkManager {
         networkInterfaceList.remove(new Tuple(activity, networkInterface));
     }
 
-    public static void broadcastConnect(final NetworkConnection networkConnection) {
+    public static void broadcastConnect() {
         for (final Tuple tuple : networkInterfaceList) {
             tuple.activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    tuple.networkInterface.onConnect(networkConnection);
+                    tuple.networkInterface.onConnect();
+                }
+            });
+        }
+    }
+
+    public static void broadcastPrepareSend(final NetworkConnection networkConnection){
+        for (final Tuple tuple : networkInterfaceList) {
+            tuple.activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    tuple.networkInterface.onPrepareSend(networkConnection);
                 }
             });
         }

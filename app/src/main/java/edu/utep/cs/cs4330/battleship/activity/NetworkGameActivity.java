@@ -15,36 +15,40 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import edu.utep.cs.cs4330.battleship.R;
-import edu.utep.cs.cs4330.battleship.ai.AIPlayer;
-import edu.utep.cs.cs4330.battleship.ai.Strategy;
-import edu.utep.cs.cs4330.battleship.ai.StrategyType;
-import edu.utep.cs.cs4330.battleship.model.game.BattleshipGame;
 import edu.utep.cs.cs4330.battleship.model.board.Board;
-import edu.utep.cs.cs4330.battleship.model.game.Player;
 import edu.utep.cs.cs4330.battleship.model.board.Ship;
-import edu.utep.cs.cs4330.battleship.util.Vector2;
-import edu.utep.cs.cs4330.battleship.view.BoardView;
+import edu.utep.cs.cs4330.battleship.model.game.BattleshipGame;
+import edu.utep.cs.cs4330.battleship.model.game.Player;
+import edu.utep.cs.cs4330.battleship.network.NetworkConnection;
+import edu.utep.cs.cs4330.battleship.network.NetworkInterface;
+import edu.utep.cs.cs4330.battleship.network.NetworkPlayer;
+import edu.utep.cs.cs4330.battleship.network.packet.Packet;
+import edu.utep.cs.cs4330.battleship.network.packet.PacketGameover;
+import edu.utep.cs.cs4330.battleship.network.packet.PacketHit;
+import edu.utep.cs.cs4330.battleship.network.packet.PacketRequestResponse;
+import edu.utep.cs.cs4330.battleship.network.packet.PacketRestartRequest;
+import edu.utep.cs.cs4330.battleship.view.NetworkBoardView;
 
-public class AIGameActivity extends AppCompatActivity implements BattleshipGame.GameListener {
-
+public class NetworkGameActivity extends AppCompatActivity implements BattleshipGame.GameListener, NetworkInterface {
     private enum Sound {Hit, Sink, Gameover}
 
-    private static final boolean isAIAllowedMultipleShots = true;
     private boolean isSoundEnabled = true;
+
+    private NetworkConnection networkConnection;
 
     /**
      * Small BoardView
-     * This is our deployed board that the AI will try to beat
+     * This is our deployed board that the network player will try to beat
      */
-    private BoardView boardViewDeployed;
+    private NetworkBoardView boardViewDeployed;
     private Board boardDeployed;
     private int sunkShipsByCpu;
 
     /**
      * Big BoardView
-     * This is the randomized board we want to beat
+     * This is the board we want to beat
      */
-    private BoardView boardViewRandom;
+    private NetworkBoardView boardViewRandom;
     private Board boardRandom;
     private int sunkShipsByHuman;
 
@@ -86,19 +90,22 @@ public class AIGameActivity extends AppCompatActivity implements BattleshipGame.
         gameMain = (BattleshipGame) savedInstanceState.getSerializable("GAME");
     }
 
+    private Bundle restartBundle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        restartBundle = savedInstanceState;
+
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        setContentView(R.layout.activity_ai_game);
+        setContentView(R.layout.activity_network_game);
 
         // Get the necessary views
-        boardViewDeployed = (BoardView) findViewById(R.id.board_view_small);
-        boardViewRandom = (BoardView) findViewById(R.id.board_view_big);
+        boardViewDeployed = (NetworkBoardView) findViewById(R.id.board_view_network_small);
+        boardViewRandom = (NetworkBoardView) findViewById(R.id.board_view_network_big);
 
-        textCurrentPlayer = (TextView) findViewById(R.id.text_current_player);
+        textCurrentPlayer = (TextView) findViewById(R.id.text_network_current_player);
 
-        switchSound = (Switch) findViewById(R.id.switch_sound);
+        switchSound = (Switch) findViewById(R.id.switch_network_sound);
         switchSound.setChecked(isSoundEnabled);
 
         if (savedInstanceState != null) {
@@ -112,15 +119,12 @@ public class AIGameActivity extends AppCompatActivity implements BattleshipGame.
         // It contains our deployment units
 
         // Load the board and strategy from our deployment activity
-        Strategy strategyAI = Strategy.fromStrategyType(StrategyType.Sweep);
+        boolean weGoFirst = false;
         if (extras != null) {
-            boardDeployed = (Board) extras.get(getString(R.string.deployment_intent_board));
-
-            StrategyType strategyType = (StrategyType) extras.get(getString(R.string.deployment_intent_strategy));
-            strategyAI = Strategy.fromStrategyType(strategyType);
+            boardDeployed = (Board) extras.get("OWN");
+            boardRandom = (Board) extras.get("OPPONENT");
+            weGoFirst = extras.getBoolean("FIRST");
         }
-        //boardDeployed = new Board(10);
-        //boardDeployed.addRandomShips();
         boardDeployed.addBoardListener(new Board.BoardListener() {
             @Override
             public void onShipHit(Ship ship) {
@@ -132,7 +136,7 @@ public class AIGameActivity extends AppCompatActivity implements BattleshipGame.
                     sunkShipsByCpu++;
 
                     if (sunkShipsByCpu >= boardDeployed.getTotalShips())
-                        showDialogGameover(false);
+                        showDialogGameover(false, true);
                 }
             }
 
@@ -144,15 +148,13 @@ public class AIGameActivity extends AppCompatActivity implements BattleshipGame.
             }
         });
         boardViewDeployed.setBoard(boardDeployed);
+        boardViewDeployed.isSending = false;
+        boardViewDeployed.onCreate(this);
 
         // This AI wants to defeat our deployed map
-        final Player playerAI = new AIPlayer(boardDeployed, isAIAllowedMultipleShots, strategyAI);
+        //final Player playerAI = new AIPlayer(boardDeployed, isAIAllowedMultipleShots, strategyAI);
+        final Player playerNetwork = new NetworkPlayer(boardDeployed, true);
 
-        // Big BoardView
-        // This is what we want to defeat
-        // It contains random deployment units
-        boardRandom = new Board(10);
-        boardRandom.addRandomShips();
         boardRandom.addBoardListener(new Board.BoardListener() {
             @Override
             public void onShipHit(Ship ship) {
@@ -166,7 +168,7 @@ public class AIGameActivity extends AppCompatActivity implements BattleshipGame.
                     sunkShipsByHuman++;
 
                     if (sunkShipsByHuman >= boardRandom.getTotalShips())
-                        showDialogGameover(true);
+                        showDialogGameover(true, true);
                 }
             }
 
@@ -176,14 +178,22 @@ public class AIGameActivity extends AppCompatActivity implements BattleshipGame.
                 boardViewDeployed.invalidate();
             }
         });
+        // Big BoardView
+        // This is what we want to defeat
+        boardViewRandom.isSending = true;
+        boardViewRandom.onCreate(this);
         boardViewRandom.setBoard(boardRandom);
 
         // We want to defeat the random board
         Player playerHuman = new Player(boardRandom, true);
 
         // Start our main game
-        gameMain = new BattleshipGame(playerHuman, playerAI);
+        gameMain = new BattleshipGame(playerHuman, playerNetwork);
         gameMain.addGameListener(this);
+
+        // Skip turns if we don't start first
+        if(!weGoFirst)
+            gameMain.nextTurn();
 
         // For sound control
         switchSound.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -218,13 +228,13 @@ public class AIGameActivity extends AppCompatActivity implements BattleshipGame.
 
     @Override
     public void onTurnChange(Player currentPlayer) {
-        if (currentPlayer instanceof AIPlayer) {
+        if (currentPlayer instanceof NetworkPlayer) {
+            boardViewDeployed.ignoreHits = false;
             boardViewRandom.disableBoardTouch = true;
-            textCurrentPlayer.setText(getString(R.string.game_turn_ai));
-            Vector2 simulatedPlay = currentPlayer.onOwnTurn();
-            boardDeployed.hit(simulatedPlay);
+            textCurrentPlayer.setText("Opponent");
 
         } else {
+            boardViewDeployed.ignoreHits = true;
             boardViewRandom.disableBoardTouch = false;
             textCurrentPlayer.setText(getString(R.string.game_turn_player));
         }
@@ -248,10 +258,27 @@ public class AIGameActivity extends AppCompatActivity implements BattleshipGame.
         mp.start();
     }
 
-    public void onClickMainMenu(View v) {
-        showDialogExit();
+    public void onClickRequestRestart(View v) {
+        showDialogRequestRestart();
     }
 
+    public void showDialogRequestRestart(){
+        AlertDialog.Builder dialogExit = new AlertDialog.Builder(this);
+        dialogExit.setTitle(getString(R.string.game_exit_title));
+        dialogExit.setMessage("Want to request a restart?");
+        dialogExit.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                PacketRestartRequest packet = new PacketRestartRequest();
+                networkConnection.sendPacket(packet);
+            }
+        });
+        dialogExit.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        dialogExit.setIcon(android.R.drawable.ic_dialog_alert);
+        dialogExit.show();
+    }
     public void showDialogExit() {
         AlertDialog.Builder dialogExit = new AlertDialog.Builder(this);
         dialogExit.setTitle(getString(R.string.game_exit_title));
@@ -271,13 +298,38 @@ public class AIGameActivity extends AppCompatActivity implements BattleshipGame.
         dialogExit.show();
     }
 
-    public void showDialogGameover(boolean humanWin) {
-        String message;
+    public void showDialogRequestResponse(){
+        AlertDialog.Builder dialogExit = new AlertDialog.Builder(this);
+        dialogExit.setTitle("Confirmation");
+        dialogExit.setMessage("Your opponent has requested a restart. Agree?");
+        dialogExit.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            onCreate(restartBundle);
+            PacketRequestResponse response = new PacketRequestResponse(true);
+            networkConnection.sendPacket(response);
+            }
+        });
+        dialogExit.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                PacketRequestResponse response = new PacketRequestResponse(false);
+                networkConnection.sendPacket(response);
+            }
+        });
+        dialogExit.setIcon(android.R.drawable.ic_dialog_alert);
+        dialogExit.show();
+    }
 
+    public void showDialogGameover(boolean humanWin, boolean sendPacket) {
+        String message;
         if (humanWin)
             message = getString(R.string.game_won);
+
         else
             message = getString(R.string.game_lost);
+
+        PacketGameover packet = new PacketGameover(!humanWin);
+        if(sendPacket)
+            networkConnection.sendPacket(packet);
 
         playSound(Sound.Gameover);
 
@@ -294,4 +346,43 @@ public class AIGameActivity extends AppCompatActivity implements BattleshipGame.
         dialogGameover.setMessage(message);
         dialogGameover.show();
     }
+
+
+    @Override
+    public void onConnect() {
+
+    }
+
+    @Override
+    public void onDisconnect() {
+
+    }
+
+    @Override
+    public void onReceive(Packet p) {
+        if(p instanceof PacketHit){
+            // They fired against us
+            PacketHit packetHit = (PacketHit)p;
+            boardDeployed.hit(packetHit.X, packetHit.Y);
+        }
+        else if(p instanceof PacketRestartRequest){
+            showDialogRequestRestart();
+        }
+        else if(p instanceof PacketRequestResponse){
+            PacketRequestResponse response = (PacketRequestResponse)p;
+            if(response.isAgreed)
+                onCreate(restartBundle);
+        }
+        else if(p instanceof PacketGameover){
+            PacketGameover packetGameover = (PacketGameover)p;
+            boolean humanWin = packetGameover.isWin;
+            showDialogGameover(humanWin, false);
+        }
+    }
+
+    @Override
+    public void onPrepareSend(NetworkConnection networkConnection) {
+        this.networkConnection = networkConnection;
+    }
+
 }

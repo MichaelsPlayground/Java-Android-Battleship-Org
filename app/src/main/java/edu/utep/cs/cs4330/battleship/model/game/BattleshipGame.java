@@ -56,7 +56,7 @@ public class BattleshipGame implements Serializable {
         playerOpponent.board.addBoardListener(listener);
     }
 
-    private void nextTurn() {
+    public void nextTurn() {
         currentTurn++;
         if (currentTurn > 1)
             currentTurn = 0;

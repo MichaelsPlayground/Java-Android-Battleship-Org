@@ -1,27 +1,25 @@
 // Author: Jose Perez <josegperez@mail.com> and Diego Reynoso
 package edu.utep.cs.cs4330.battleship.network.packet;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-
-import edu.utep.cs.cs4330.battleship.model.GameoverType;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public class PacketGameover extends Packet {
-    private GameoverType gameoverType;
+    public boolean isWin;
 
-    public PacketGameover(DataInputStream input) throws IOException{
+    public PacketGameover(ObjectInputStream input) throws IOException{
         super(PacketID.GAMEOVER);
-        gameoverType = GameoverType.fromValue(input.readInt());
+        isWin = input.readBoolean();
     }
 
-    public PacketGameover(GameoverType gameoverType){
+    public PacketGameover(boolean isWin){
         super(PacketID.GAMEOVER);
-        this.gameoverType = gameoverType;
+        this.isWin = isWin;
     }
 
     @Override
-    public void sendPacket(DataOutputStream output) throws IOException {
-        output.writeInt(gameoverType.value);
+    public void sendPacket(ObjectOutputStream output) throws IOException {
+        output.writeBoolean(isWin);
     }
 }

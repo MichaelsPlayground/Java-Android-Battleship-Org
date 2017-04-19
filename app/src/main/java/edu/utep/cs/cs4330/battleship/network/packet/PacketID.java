@@ -6,7 +6,6 @@ class PacketID {
     public static final int HOST_HANDSHAKE = 0;
     public static final int CLIENT_HANDSHAKE = 1;
     public static final int HIT = 2;
-    public static final int HIT_RESPONSE = 3;
     public static final int GAMEOVER = 4;
     public static final int RESTART_REQUEST = 5;
     public static final int REQUEST_RESPONSE = 6;

@@ -201,7 +201,7 @@ public class Board implements Serializable {
 
     public static Board fromJSON(String boardJSON) {
         try {
-            return (Board) new Gson().fromJson(boardJSON, Board.class);
+            return new Gson().fromJson(boardJSON, Board.class);
         } catch (JsonParseException ex) {
             return null;
         }

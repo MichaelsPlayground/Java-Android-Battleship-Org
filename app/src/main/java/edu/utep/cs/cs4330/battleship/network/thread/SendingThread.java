@@ -6,6 +6,7 @@ import android.util.Log;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,26 +16,28 @@ import edu.utep.cs.cs4330.battleship.network.packet.Packet;
 
 public class SendingThread extends Thread {
     private static final String TAG = "Debug";
-    private final DataOutputStream mmOutStream;
+    private final ObjectOutputStream mmOutStream;
     private final List<Packet> packetList;
+    private final NetworkConnection networkConnection;
 
     public SendingThread(BluetoothSocket socket) {
-        DataOutputStream tmpOut = null;
+        ObjectOutputStream tmpOut = null;
         try {
-            tmpOut = new DataOutputStream(socket.getOutputStream());
+            tmpOut = new ObjectOutputStream(socket.getOutputStream());
         } catch (IOException e) {
             Log.e(TAG, "Error occurred when creating output stream", e);
         }
 
         mmOutStream = tmpOut;
         packetList = new ArrayList<>();
-
-        NetworkManager.broadcastConnect(new NetworkConnection(this));
+        networkConnection = new NetworkConnection(this);
+        NetworkManager.broadcastConnect();
     }
 
     @Override
     public void run() {
         while (true) {
+            NetworkManager.broadcastPrepareSend(networkConnection);
             for (Packet p : packetList)
                 write(p);
         }
@@ -51,6 +54,9 @@ public class SendingThread extends Thread {
             p.sendPacket(mmOutStream);
         } catch (IOException e) {
             Log.e(TAG, "Error occurred when sending data", e);
+        }
+        catch(Exception ex){
+            Log.e(TAG, "Error when writing", ex);
         }
     }
 }

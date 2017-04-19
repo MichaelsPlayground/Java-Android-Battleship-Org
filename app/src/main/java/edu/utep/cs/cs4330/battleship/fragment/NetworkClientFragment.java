@@ -22,11 +22,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import edu.utep.cs.cs4330.battleship.R;
+import edu.utep.cs.cs4330.battleship.activity.BluetoothSetupActivity;
+import edu.utep.cs.cs4330.battleship.activity.NetworkGameActivity;
+import edu.utep.cs.cs4330.battleship.model.board.Board;
 import edu.utep.cs.cs4330.battleship.network.NetworkConnection;
 import edu.utep.cs.cs4330.battleship.network.NetworkInterface;
 import edu.utep.cs.cs4330.battleship.network.NetworkManager;
 import edu.utep.cs.cs4330.battleship.network.packet.Packet;
 import edu.utep.cs.cs4330.battleship.network.packet.PacketClientHandshake;
+import edu.utep.cs.cs4330.battleship.network.packet.PacketHostHandshake;
 import edu.utep.cs.cs4330.battleship.network.thread.ClientThread;
 
 import static android.app.Activity.RESULT_OK;
@@ -41,8 +45,6 @@ public class NetworkClientFragment extends Fragment implements NetworkInterface 
     private TextView textClientStatus;
     private ProgressBar progressBarClient;
     private Button btnClient;
-
-    private NetworkConnection networkConnection;
 
     public NetworkClientFragment() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -181,12 +183,15 @@ public class NetworkClientFragment extends Fragment implements NetworkInterface 
     }
 
     @Override
-    public void onConnect(final NetworkConnection networkConnection) {
+    public void onConnect() {
         textClientStatus.setText("Connected to host");
         progressBarClient.setIndeterminate(false);
+    }
 
-        networkConnection.sendPacket(new PacketClientHandshake("Client"));
-        this.networkConnection = networkConnection;
+    @Override
+    public void onPrepareSend(NetworkConnection networkConnection) {
+        Board board = ((BluetoothSetupActivity)getActivity()).boardDeployment;
+        networkConnection.sendPacket(new PacketClientHandshake("Client", board));
     }
 
     @Override
@@ -196,6 +201,15 @@ public class NetworkClientFragment extends Fragment implements NetworkInterface 
 
     @Override
     public void onReceive(final Packet p) {
-
+        if(p instanceof PacketHostHandshake)
+        {
+            PacketHostHandshake packetHostHandshake = (PacketHostHandshake)p;
+            Board board = ((BluetoothSetupActivity)getActivity()).boardDeployment;
+            Intent i = new Intent(getActivity(), NetworkGameActivity.class);
+            i.putExtra("OWN", board);
+            i.putExtra("OPPONENT", packetHostHandshake.hostBoard);
+            i.putExtra("FIRST", packetHostHandshake.isClientFirst);
+            startActivity(i);
+        }
     }
 }

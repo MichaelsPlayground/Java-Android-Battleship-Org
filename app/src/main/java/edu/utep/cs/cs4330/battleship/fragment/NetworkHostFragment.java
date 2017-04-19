@@ -16,6 +16,9 @@ import android.widget.TextView;
 import java.util.Random;
 
 import edu.utep.cs.cs4330.battleship.R;
+import edu.utep.cs.cs4330.battleship.activity.BluetoothSetupActivity;
+import edu.utep.cs.cs4330.battleship.activity.NetworkGameActivity;
+import edu.utep.cs.cs4330.battleship.model.board.Board;
 import edu.utep.cs.cs4330.battleship.network.NetworkConnection;
 import edu.utep.cs.cs4330.battleship.network.NetworkInterface;
 import edu.utep.cs.cs4330.battleship.network.NetworkManager;
@@ -98,11 +101,9 @@ public class NetworkHostFragment extends Fragment implements NetworkInterface {
     }
 
     @Override
-    public void onConnect(final NetworkConnection networkConnection) {
+    public void onConnect() {
         progressBarHost.setIndeterminate(false);
         textHostStatus.setText("Connected with client");
-
-        this.networkConnection = networkConnection;
     }
 
     @Override
@@ -117,9 +118,21 @@ public class NetworkHostFragment extends Fragment implements NetworkInterface {
             Log.d("Debug", "Hey there " + clientHandshake.clientName);
 
             boolean isClientFirst = new Random(System.nanoTime()).nextBoolean();
-            PacketHostHandshake hostHandshake = new PacketHostHandshake("Host", isClientFirst);
+            Board board = ((BluetoothSetupActivity)getActivity()).boardDeployment;
+            PacketHostHandshake hostHandshake = new PacketHostHandshake("Host", isClientFirst, board);
             networkConnection.sendPacket(hostHandshake);
+
+            Intent i = new Intent(getActivity(), NetworkGameActivity.class);
+            i.putExtra("OWN", board);
+            i.putExtra("OPPONENT", clientHandshake.clientBoard);
+            i.putExtra("FIRST", !isClientFirst);
+            startActivity(i);
         }
+    }
+
+    @Override
+    public void onPrepareSend(NetworkConnection networkConnection) {
+        this.networkConnection = networkConnection;
     }
 }
 
