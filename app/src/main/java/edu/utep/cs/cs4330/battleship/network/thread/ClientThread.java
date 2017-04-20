@@ -27,9 +27,11 @@ public class ClientThread extends Thread {
     }
 
     public void run() {
+        Log.d("Debug", "ClientThread in run()");
         bluetoothAdapter.cancelDiscovery();
         try {
             mmSocket.connect();
+            Log.d("Debug", "ClientThread connected");
         } catch (IOException connectException) {
             try {
                 mmSocket.close();
@@ -43,7 +45,8 @@ public class ClientThread extends Thread {
     }
 
     public void manageMyConnectedSocket(BluetoothSocket socket) {
-        new ReceivingThread(socket).start();
+        Log.d("Debug", "Starting receiving and sending threads");
         new SendingThread(socket).start();
+        new ReceivingThread(socket).start();
     }
 }

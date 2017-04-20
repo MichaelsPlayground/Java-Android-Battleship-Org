@@ -2,16 +2,26 @@
 package edu.utep.cs.cs4330.battleship.network;
 
 import android.app.Activity;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 import edu.utep.cs.cs4330.battleship.network.packet.Packet;
 
 public class NetworkManager {
-
-
     private static final List<Tuple> networkInterfaceList = new ArrayList<>();
+    public static final BlockingQueue<Packet> packetList = new ArrayBlockingQueue<Packet>(20);
+
+    public static synchronized void sendPacket(Packet p) {
+        try {
+            packetList.put(p);
+        }catch (InterruptedException e){
+            Log.d("Debug", "addPacket interrupted");
+        }
+    }
 
     public static void registerNetworkInterface(Activity activity, NetworkInterface networkInterface) {
         Tuple t = new Tuple(activity, networkInterface);
@@ -29,17 +39,6 @@ public class NetworkManager {
                 @Override
                 public void run() {
                     tuple.networkInterface.onConnect();
-                }
-            });
-        }
-    }
-
-    public static void broadcastPrepareSend(final NetworkConnection networkConnection){
-        for (final Tuple tuple : networkInterfaceList) {
-            tuple.activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    tuple.networkInterface.onPrepareSend(networkConnection);
                 }
             });
         }

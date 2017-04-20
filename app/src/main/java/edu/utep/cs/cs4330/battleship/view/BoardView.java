@@ -80,6 +80,7 @@ public class BoardView extends View {
         if (!disableBoardTouch) {
             board.hit(x, y);
         }
+        invalidate();
     }
 
     public Paint getPlacePaint(Place p) {

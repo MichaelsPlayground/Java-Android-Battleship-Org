@@ -2,31 +2,59 @@ package edu.utep.cs.cs4330.battleship.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 
-import edu.utep.cs.cs4330.battleship.network.NetworkConnection;
+import edu.utep.cs.cs4330.battleship.model.board.Place;
 import edu.utep.cs.cs4330.battleship.network.NetworkInterface;
 import edu.utep.cs.cs4330.battleship.network.NetworkManager;
 import edu.utep.cs.cs4330.battleship.network.packet.Packet;
 import edu.utep.cs.cs4330.battleship.network.packet.PacketHit;
 
 public class NetworkBoardView extends BoardView implements NetworkInterface {
-    public boolean ignoreHits = false;
-    public boolean isSending = false;
+    public boolean isDeployedBoard = false;
+    public boolean isCurrentTurn = false;
 
-    private NetworkConnection networkConnection;
+    @Override
+    public boolean isPlacePainted(Place p) {
+        if(isDeployedBoard) {
+            invalidate();
+            return p.isHit() || p.hasShip();
+        }
+        else
+            return super.isPlacePainted(p);
+    }
+
+    @Override
+    public Paint getPlacePaint(Place p) {
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        if (p.isHit() && p.hasShip())
+            paint.setColor(Color.BLACK);
+        else if (p.hasShip())
+            paint.setColor(Color.GREEN);
+
+        else if (p.isHit())
+            paint.setColor(Color.RED);
+
+        else
+            paint.setColor(Color.MAGENTA);
+
+        invalidate();
+        return paint;
+    }
+
     @Override
     public void onBoardTouch(int x, int y) {
-        if(isSending){
+        if(isDeployedBoard)
+            return;
+
+        if(isCurrentTurn) {
             PacketHit p = new PacketHit(x, y);
-            networkConnection.sendPacket(p);
-            return;
+            NetworkManager.sendPacket(p);
+            super.onBoardTouch(x, y);
         }
-
-        if(ignoreHits)
-            return;
-
-        super.onBoardTouch(x, y);
     }
 
     public void onCreate(Activity activity){
@@ -45,21 +73,11 @@ public class NetworkBoardView extends BoardView implements NetworkInterface {
 
     @Override
     public void onReceive(Packet p) {
-        if(isSending)
-            return;
-
-        if(p instanceof PacketHit){
-            if(ignoreHits)
-                return;
-
+        if(isCurrentTurn && p instanceof PacketHit){
             PacketHit packetHit = (PacketHit)p;
-            getBoard().hit(packetHit.X, packetHit.Y);
+            Log.d("Debug", "PacketHit at: " + packetHit.X + ", " + packetHit.Y);
+            super.onBoardTouch(packetHit.X, packetHit.Y);
         }
-    }
-
-    @Override
-    public void onPrepareSend(NetworkConnection networkConnection) {
-        this.networkConnection = networkConnection;
     }
 
     public NetworkBoardView(Context context) {

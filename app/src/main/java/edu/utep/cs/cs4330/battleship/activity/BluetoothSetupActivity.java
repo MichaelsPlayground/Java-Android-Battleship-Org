@@ -6,6 +6,7 @@ import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.RadioGroup;
 
 import edu.utep.cs.cs4330.battleship.R;
@@ -24,9 +25,15 @@ public class BluetoothSetupActivity extends AppCompatActivity implements RadioGr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_setup);
 
+        if(savedInstanceState == null)
+            savedInstanceState = getIntent().getExtras();
+        else
+            Log.d("Debug", "We are kill");
+
         if (savedInstanceState != null) {
             // Get the board from the deployment
-            boardDeployment = (Board) savedInstanceState.get(getString(R.string.deployment_intent_board));
+            boardDeployment = (Board) savedInstanceState.get("BOARD");
+            Log.d("Debug", "Setup board is null: " + (boardDeployment == null));
         }
 
         radioGroupConnectionType = (RadioGroup) findViewById(R.id.radioGroupConnectionType);

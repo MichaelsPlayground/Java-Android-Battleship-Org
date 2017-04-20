@@ -4,59 +4,62 @@ package edu.utep.cs.cs4330.battleship.network.thread;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
-import edu.utep.cs.cs4330.battleship.network.NetworkConnection;
 import edu.utep.cs.cs4330.battleship.network.NetworkManager;
 import edu.utep.cs.cs4330.battleship.network.packet.Packet;
 
 public class SendingThread extends Thread {
     private static final String TAG = "Debug";
     private final ObjectOutputStream mmOutStream;
-    private final List<Packet> packetList;
-    private final NetworkConnection networkConnection;
+    private boolean isClosed = false;
 
     public SendingThread(BluetoothSocket socket) {
+        Log.d("Debug", "Creating sending thread");
         ObjectOutputStream tmpOut = null;
         try {
             tmpOut = new ObjectOutputStream(socket.getOutputStream());
+            tmpOut.flush();
         } catch (IOException e) {
-            Log.e(TAG, "Error occurred when creating output stream", e);
+            Log.d(TAG, "Error occurred when creating output stream", e);
         }
 
         mmOutStream = tmpOut;
-        packetList = new ArrayList<>();
-        networkConnection = new NetworkConnection(this);
         NetworkManager.broadcastConnect();
+        Log.d("Debug", "Sending thread broadcasting connect to everyone");
     }
 
     @Override
     public void run() {
         while (true) {
-            NetworkManager.broadcastPrepareSend(networkConnection);
-            for (Packet p : packetList)
+            if(isClosed)
+                return;
+
+            try {
+                Packet p = NetworkManager.packetList.take();
                 write(p);
+            }
+            catch(InterruptedException e){
+                Log.d("Debug", "Interrupted :(");
+            }
+
         }
     }
 
 
-    public synchronized void addPacket(Packet p) {
-        packetList.add(p);
-    }
 
     private void write(Packet p) {
         try {
             mmOutStream.writeInt(p.ID);
             p.sendPacket(mmOutStream);
+            mmOutStream.flush();
         } catch (IOException e) {
-            Log.e(TAG, "Error occurred when sending data", e);
+            Log.d(TAG, "Error occurred when sending data", e);
+            isClosed = true;
         }
         catch(Exception ex){
-            Log.e(TAG, "Error when writing", ex);
+            Log.d(TAG, "Error when writing", ex);
         }
     }
 }

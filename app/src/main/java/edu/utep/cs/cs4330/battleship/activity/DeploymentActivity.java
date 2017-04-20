@@ -135,7 +135,7 @@ public class DeploymentActivity extends AppCompatActivity implements DeploymentB
 
             if(networkType == NetworkAdapterType.Bluetooth){
                 Intent i = new Intent(this, BluetoothSetupActivity.class);
-                i.putExtra(getString(R.string.deployment_intent_board), boardViewDeployment.getBoard());
+                i.putExtra("BOARD", boardViewDeployment.getBoard());
                 startActivity(i);
             }
         }

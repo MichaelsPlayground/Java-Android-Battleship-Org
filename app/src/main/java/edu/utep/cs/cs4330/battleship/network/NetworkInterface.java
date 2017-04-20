@@ -9,6 +9,4 @@ public interface NetworkInterface {
     void onDisconnect();
 
     void onReceive(final Packet p);
-
-    void onPrepareSend(final NetworkConnection networkConnection);
 }

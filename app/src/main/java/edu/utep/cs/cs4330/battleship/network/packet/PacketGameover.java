@@ -6,20 +6,20 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class PacketGameover extends Packet {
-    public boolean isWin;
+    public boolean weWon;
 
     public PacketGameover(ObjectInputStream input) throws IOException{
         super(PacketID.GAMEOVER);
-        isWin = input.readBoolean();
+        weWon = input.readBoolean();
     }
 
     public PacketGameover(boolean isWin){
         super(PacketID.GAMEOVER);
-        this.isWin = isWin;
+        this.weWon = isWin;
     }
 
     @Override
     public void sendPacket(ObjectOutputStream output) throws IOException {
-        output.writeBoolean(isWin);
+        output.writeBoolean(weWon);
     }
 }

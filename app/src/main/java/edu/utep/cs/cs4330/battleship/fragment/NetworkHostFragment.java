@@ -3,6 +3,7 @@ package edu.utep.cs.cs4330.battleship.fragment;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.net.Network;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -19,7 +20,6 @@ import edu.utep.cs.cs4330.battleship.R;
 import edu.utep.cs.cs4330.battleship.activity.BluetoothSetupActivity;
 import edu.utep.cs.cs4330.battleship.activity.NetworkGameActivity;
 import edu.utep.cs.cs4330.battleship.model.board.Board;
-import edu.utep.cs.cs4330.battleship.network.NetworkConnection;
 import edu.utep.cs.cs4330.battleship.network.NetworkInterface;
 import edu.utep.cs.cs4330.battleship.network.NetworkManager;
 import edu.utep.cs.cs4330.battleship.network.packet.Packet;
@@ -32,8 +32,6 @@ public class NetworkHostFragment extends Fragment implements NetworkInterface {
     private TextView textHostStatus;
     private ProgressBar progressBarHost;
     private Button btnHost;
-
-    private NetworkConnection networkConnection;
 
     public NetworkHostFragment() {
     }
@@ -120,19 +118,14 @@ public class NetworkHostFragment extends Fragment implements NetworkInterface {
             boolean isClientFirst = new Random(System.nanoTime()).nextBoolean();
             Board board = ((BluetoothSetupActivity)getActivity()).boardDeployment;
             PacketHostHandshake hostHandshake = new PacketHostHandshake("Host", isClientFirst, board);
-            networkConnection.sendPacket(hostHandshake);
+            NetworkManager.sendPacket(hostHandshake);
 
             Intent i = new Intent(getActivity(), NetworkGameActivity.class);
             i.putExtra("OWN", board);
             i.putExtra("OPPONENT", clientHandshake.clientBoard);
             i.putExtra("FIRST", !isClientFirst);
             startActivity(i);
+            NetworkManager.unregisterNetworkInterface(getActivity(), this);
         }
     }
-
-    @Override
-    public void onPrepareSend(NetworkConnection networkConnection) {
-        this.networkConnection = networkConnection;
-    }
 }
-

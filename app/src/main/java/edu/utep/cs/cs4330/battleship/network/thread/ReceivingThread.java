@@ -16,14 +16,22 @@ public class ReceivingThread extends Thread {
     private final ObjectInputStream mmInStream;
 
     public ReceivingThread(BluetoothSocket socket) {
+        Log.d("Debug", "Creating receiving thread");
         ObjectInputStream tmpIn = null;
 
         try {
-            tmpIn = new ObjectInputStream(socket.getInputStream());
+            tmpIn = new ObjectInputStream(new DataInputStream(socket.getInputStream()));
         } catch (IOException e) {
-            Log.e(TAG, "Error occurred when creating input stream", e);
+            Log.d(TAG, "Error occurred when creating input stream", e);
+            try{
+                tmpIn.close();
+            }
+            catch(IOException ex){
+                Log.d("Debug", "Couldn't close input");
+            }
         }
         mmInStream = tmpIn;
+        Log.d("Debug", "Input stream is null: " + (mmInStream == null));
     }
 
     @Override
@@ -34,11 +42,19 @@ public class ReceivingThread extends Thread {
                 // Read from the InputStream.
                 Packet packetInput = Packet.readPacket(mmInStream);
 
+                Log.d("Debug", "Read a packet: " + packetInput);
+
                 // Send the packet to the subscribed interfaces
                 NetworkManager.broadcastPacket(packetInput);
 
             } catch (Exception e) {
                 Log.d(TAG, "Input stream was disconnected", e);
+                try{
+                    this.mmInStream.close();
+                }
+                catch(IOException ex){
+                    Log.d("Debug", "Couldn't close input");
+                }
                 NetworkManager.broadcastDisconnect();
                 break;
             }

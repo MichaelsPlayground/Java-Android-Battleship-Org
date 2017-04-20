@@ -2,6 +2,7 @@
 package edu.utep.cs.cs4330.battleship.fragment;
 
 import android.Manifest;
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -9,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.Network;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -25,7 +27,6 @@ import edu.utep.cs.cs4330.battleship.R;
 import edu.utep.cs.cs4330.battleship.activity.BluetoothSetupActivity;
 import edu.utep.cs.cs4330.battleship.activity.NetworkGameActivity;
 import edu.utep.cs.cs4330.battleship.model.board.Board;
-import edu.utep.cs.cs4330.battleship.network.NetworkConnection;
 import edu.utep.cs.cs4330.battleship.network.NetworkInterface;
 import edu.utep.cs.cs4330.battleship.network.NetworkManager;
 import edu.utep.cs.cs4330.battleship.network.packet.Packet;
@@ -127,10 +128,10 @@ public class NetworkClientFragment extends Fragment implements NetworkInterface 
         // Start looking for device if we have permission
         if (overridePermission || hasPerm) {
             // Start looking for devices
-            bluetoothAdapter.startDiscovery();
+            boolean discovery = bluetoothAdapter.startDiscovery();
 
             progressBarClient.setIndeterminate(true);
-            textClientStatus.setText("Looking for host");
+            textClientStatus.setText("Looking for host: " + discovery);
             btnClient.setEnabled(false);
         } else {
             // No permission so request it
@@ -151,14 +152,16 @@ public class NetworkClientFragment extends Fragment implements NetworkInterface 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            Log.d("Debug", "Receiver: " + action);
-            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+            boolean isBluetoothAction = BluetoothDevice.ACTION_FOUND.equals(action) || BluetoothDevice.ACTION_NAME_CHANGED.equals(action);
+            if (isBluetoothAction) {
                 // Discovery has found a device. Get the BluetoothDevice object and its info from the Intent.
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 String deviceName = device.getName();
-                String deviceHardwareAddress = device.getAddress(); // MAC address
-                Log.d("Debug", "Name: " + deviceName + ", " + deviceHardwareAddress + " connected");
-                new ClientThread(device).start();
+                if(deviceName != null && deviceName.contains("Jose")) {
+                    String deviceHardwareAddress = device.getAddress(); // MAC address
+                    Log.d("Debug", "Name: " + deviceName + ", " + deviceHardwareAddress + " connected");
+                    new ClientThread(device).start();
+                }
             }
         }
     };
@@ -182,16 +185,29 @@ public class NetworkClientFragment extends Fragment implements NetworkInterface 
         }
     }
 
+    public boolean isSendingPacket = false;
     @Override
     public void onConnect() {
         textClientStatus.setText("Connected to host");
         progressBarClient.setIndeterminate(false);
+
+        isSendingPacket = true;
+        if(isAdded())
+            sendHandshake();
+    }
+
+    public void sendHandshake(){
+        Board board = ((BluetoothSetupActivity) getActivity()).boardDeployment;
+        NetworkManager.sendPacket(new PacketClientHandshake("Client", board));
+
     }
 
     @Override
-    public void onPrepareSend(NetworkConnection networkConnection) {
-        Board board = ((BluetoothSetupActivity)getActivity()).boardDeployment;
-        networkConnection.sendPacket(new PacketClientHandshake("Client", board));
+    public void onStart() {
+        super.onStart();
+
+        if (isSendingPacket)
+            sendHandshake();
     }
 
     @Override
@@ -210,6 +226,7 @@ public class NetworkClientFragment extends Fragment implements NetworkInterface 
             i.putExtra("OPPONENT", packetHostHandshake.hostBoard);
             i.putExtra("FIRST", packetHostHandshake.isClientFirst);
             startActivity(i);
+            NetworkManager.unregisterNetworkInterface(getActivity(), this);
         }
     }
 }

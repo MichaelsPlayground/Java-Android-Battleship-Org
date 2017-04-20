@@ -30,6 +30,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.BluetoothSetupActivity"></activity>
+        <activity android:name=".activity.NetworkGameActivity"></activity>
     </application>
 
 </manifest>

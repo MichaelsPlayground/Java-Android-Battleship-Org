@@ -30,17 +30,19 @@ public class HostThread extends Thread {
     }
 
     public void run() {
+        Log.d("Debug", "HostThread in run()");
         BluetoothSocket socket;
         // Keep listening until exception occurs or a socket is returned.
         while (true) {
             try {
                 Log.d("Debug", "Waiting for client...");
                 socket = mmServerSocket.accept();
+                Log.d("Debug", "Found a client");
             } catch (IOException e) {
                 Log.e("Debug", "Socket's accept() method failed", e);
                 break;
             }
-            Log.d("Debug", "Client is null");
+            Log.d("Debug", "Client is null: " + (socket == null));
 
             if (socket != null) {
                 // A connection was accepted. Perform work associated with
@@ -58,7 +60,8 @@ public class HostThread extends Thread {
     }
 
     public void manageMyConnectedSocket(BluetoothSocket socket) {
-        new ReceivingThread(socket).start();
+        Log.d("Debug", "Host thread is starting threads");
         new SendingThread(socket).start();
+        new ReceivingThread(socket).start();
     }
 }
