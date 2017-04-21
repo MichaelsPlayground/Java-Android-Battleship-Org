@@ -1,12 +1,15 @@
 // Author: Jose Perez <josegperez@mail.com> and Diego Reynoso
 package edu.utep.cs.cs4330.battleship.model.game;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.utep.cs.cs4330.battleship.model.board.Board;
 import edu.utep.cs.cs4330.battleship.model.board.Ship;
+import edu.utep.cs.cs4330.battleship.network.NetworkPlayer;
 
 public class BattleshipGame implements Serializable {
     public interface GameListener {
@@ -39,10 +42,14 @@ public class BattleshipGame implements Serializable {
                 // Ship was hit
                 // Player is not allowed multiple shots
                 // Change turns
-                if (!getCurrentPlayer().isAllowedMultipleShots)
+                if (!getCurrentPlayer().isAllowedMultipleShots) {
+                    Log.d("Debug", "Player not allowed multiple shots");
                     nextTurn();
-                else // Player is allowed more shots so let them know
+                }
+                else {// Player is allowed more shots so let them know
+                    Log.d("Debug", "Player allowed multiple shots");
                     notifyTurnChange(getCurrentPlayer());
+                }
             }
 
             @Override

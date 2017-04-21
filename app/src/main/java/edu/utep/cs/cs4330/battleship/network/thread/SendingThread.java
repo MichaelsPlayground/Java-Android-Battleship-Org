@@ -38,6 +38,7 @@ public class SendingThread extends Thread {
 
             try {
                 Packet p = NetworkManager.packetList.take();
+                Log.d("Debug", "Sending packet: " + p);
                 write(p);
             }
             catch(InterruptedException e){

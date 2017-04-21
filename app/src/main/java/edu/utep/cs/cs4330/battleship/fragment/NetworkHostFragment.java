@@ -125,6 +125,7 @@ public class NetworkHostFragment extends Fragment implements NetworkInterface {
             i.putExtra("OPPONENT", clientHandshake.clientBoard);
             i.putExtra("FIRST", !isClientFirst);
             startActivity(i);
+            getActivity().finish();
             NetworkManager.unregisterNetworkInterface(getActivity(), this);
         }
     }

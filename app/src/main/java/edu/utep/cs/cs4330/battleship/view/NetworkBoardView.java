@@ -14,12 +14,12 @@ import edu.utep.cs.cs4330.battleship.network.packet.Packet;
 import edu.utep.cs.cs4330.battleship.network.packet.PacketHit;
 
 public class NetworkBoardView extends BoardView implements NetworkInterface {
-    public boolean isDeployedBoard = false;
-    public boolean isCurrentTurn = false;
+    public boolean showShips = false;
+    public boolean receivesPackets = false;
 
     @Override
     public boolean isPlacePainted(Place p) {
-        if(isDeployedBoard) {
+        if(showShips) {
             invalidate();
             return p.isHit() || p.hasShip();
         }
@@ -29,6 +29,9 @@ public class NetworkBoardView extends BoardView implements NetworkInterface {
 
     @Override
     public Paint getPlacePaint(Place p) {
+        if(!showShips)
+            return super.getPlacePaint(p);
+
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         if (p.isHit() && p.hasShip())
             paint.setColor(Color.BLACK);
@@ -47,14 +50,12 @@ public class NetworkBoardView extends BoardView implements NetworkInterface {
 
     @Override
     public void onBoardTouch(int x, int y) {
-        if(isDeployedBoard)
+        if(disableBoardTouch)
             return;
 
-        if(isCurrentTurn) {
-            PacketHit p = new PacketHit(x, y);
-            NetworkManager.sendPacket(p);
-            super.onBoardTouch(x, y);
-        }
+        PacketHit p = new PacketHit(x, y);
+        NetworkManager.sendPacket(p);
+        super.onBoardTouch(x, y);
     }
 
     public void onCreate(Activity activity){
@@ -73,10 +74,18 @@ public class NetworkBoardView extends BoardView implements NetworkInterface {
 
     @Override
     public void onReceive(Packet p) {
-        if(isCurrentTurn && p instanceof PacketHit){
+        if(receivesPackets && p instanceof PacketHit){
+            Log.d("Debug", "Board received PacketHit: " + p);
             PacketHit packetHit = (PacketHit)p;
-            Log.d("Debug", "PacketHit at: " + packetHit.X + ", " + packetHit.Y);
-            super.onBoardTouch(packetHit.X, packetHit.Y);
+            int x = packetHit.X;
+            int y = packetHit.Y;
+
+            // Ignore duplicate packets
+            if(getBoard().placeAt(x, y).isHit())
+                return;
+
+            Log.d("Debug", "Hitting");
+            getBoard().hit(packetHit.X, packetHit.Y);
         }
     }
 

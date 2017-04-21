@@ -80,7 +80,7 @@
 
                     <TextView
                         android:id="@+id/text_network_turn"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/game_turn"
@@ -88,18 +88,12 @@
                         android:textSize="24sp"
                         android:textStyle="normal|bold|italic" />
 
-                    <Space
-                        android:layout_width="30dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
                     <TextView
                         android:id="@+id/text_network_current_player"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/game_turn_player"
-                        android:textAlignment="textEnd"
+                        android:text="Opponent"
                         android:textColor="@color/colorAccent"
                         android:textSize="24sp" />
                 </LinearLayout>

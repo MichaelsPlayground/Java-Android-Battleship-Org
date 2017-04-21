@@ -226,6 +226,7 @@ public class NetworkClientFragment extends Fragment implements NetworkInterface 
             i.putExtra("OPPONENT", packetHostHandshake.hostBoard);
             i.putExtra("FIRST", packetHostHandshake.isClientFirst);
             startActivity(i);
+            getActivity().finish();
             NetworkManager.unregisterNetworkInterface(getActivity(), this);
         }
     }

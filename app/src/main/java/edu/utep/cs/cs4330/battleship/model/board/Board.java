@@ -146,15 +146,15 @@ public class Board implements Serializable {
         return true;
     }
 
-    public boolean hit(Vector2 pos) {
+    public synchronized boolean hit(Vector2 pos) {
         return hit(pos.x, pos.y);
     }
 
-    public boolean hit(int x, int y) {
+    public synchronized boolean hit(int x, int y) {
         return hit(placeAt(x, y));
     }
 
-    public boolean hit(Place place) {
+    public synchronized boolean hit(Place place) {
         if (!isValidPlace(place) || place.isHit())
             return false;
 
@@ -167,11 +167,11 @@ public class Board implements Serializable {
         return true;
     }
 
-    public Place placeAt(Vector2 pos) {
+    public synchronized Place placeAt(Vector2 pos) {
         return placeAt(pos.x, pos.y);
     }
 
-    public Place placeAt(int x, int y) {
+    public synchronized Place placeAt(int x, int y) {
         if (x < 0 || y < 0 || x >= size || y >= size)
             return null;
         return boardPlaces[y][x];

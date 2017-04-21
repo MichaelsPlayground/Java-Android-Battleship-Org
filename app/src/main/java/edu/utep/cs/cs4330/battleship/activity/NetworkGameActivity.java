@@ -148,9 +148,9 @@ public class NetworkGameActivity extends AppCompatActivity implements Battleship
         });
         boardViewOwn.setBoard(boardOwn);
         boardViewOwn.onCreate(this);
-        boardViewOwn.isDeployedBoard = true;
+        boardViewOwn.showShips = true;
         boardViewOwn.disableBoardTouch = true;
-        boardViewOwn.isCurrentTurn = !weGoFirst;
+        boardViewOwn.receivesPackets = true;
 
         // This AI wants to defeat our deployed map
         //final Player playerAI = new AIPlayer(boardOwn, isAIAllowedMultipleShots, strategyAI);
@@ -184,7 +184,7 @@ public class NetworkGameActivity extends AppCompatActivity implements Battleship
         boardViewOpponent.onCreate(this);
         boardViewOpponent.setBoard(boardOpponent);
         boardViewOpponent.disableBoardTouch = !weGoFirst;
-        boardViewOpponent.isCurrentTurn = weGoFirst;
+        boardViewOpponent.receivesPackets = false;
 
         // We want to defeat the random board
         Player playerHuman = new Player(boardOpponent, true);
@@ -194,9 +194,13 @@ public class NetworkGameActivity extends AppCompatActivity implements Battleship
         gameMain.addGameListener(this);
 
         // Skip turns if we don't start first
-        if(!weGoFirst)
+        if(!weGoFirst) {
             gameMain.nextTurn();
-
+            textCurrentPlayer.setText("Opponent");
+        }
+        else{
+            textCurrentPlayer.setText("Yours");
+        }
         // For sound control
         switchSound.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -232,16 +236,12 @@ public class NetworkGameActivity extends AppCompatActivity implements Battleship
 
     @Override
     public void onTurnChange(Player currentPlayer) {
+        Log.d("Debug", "Turn change! " + currentPlayer);
         if (currentPlayer instanceof NetworkPlayer) {
-            boardViewOwn.isCurrentTurn = true;
-            boardViewOpponent.isCurrentTurn = false;
-            boardViewOpponent.disableBoardTouch = false;
-            textCurrentPlayer.setText("Opponent");
-
-        } else {
-            boardViewOwn.isCurrentTurn = false;
-            boardViewOpponent.isCurrentTurn = true;
             boardViewOpponent.disableBoardTouch = true;
+            textCurrentPlayer.setText("Opponent");
+        } else {
+            boardViewOpponent.disableBoardTouch = false;
             textCurrentPlayer.setText(getString(R.string.game_turn_player));
         }
         boardViewOpponent.invalidate();
