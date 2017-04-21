@@ -291,7 +291,7 @@ public class NetworkGameActivity extends AppCompatActivity implements Battleship
         dialogExit.setMessage(R.string.game_exit_message);
         dialogExit.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                NetworkManager.sendPacket(new PacketGameover(true));
+                NetworkManager.sendPacket(new PacketGameover(false));
                 NetworkManager.unregisterNetworkInterface(getParent(), (NetworkInterface)getParent());
                 Intent i = new Intent(getApplication(), MainMenuActivity.class);
                 startActivity(i);
