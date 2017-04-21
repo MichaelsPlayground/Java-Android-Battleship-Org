@@ -89,29 +89,8 @@ public class NetworkGameActivity extends AppCompatActivity implements Battleship
         //gameMain = (BattleshipGame) savedInstanceState.getSerializable("GAME");
     }
 
-    private Bundle restartBundle;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        restartBundle = savedInstanceState;
-
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        setContentView(R.layout.activity_network_game);
-
-        // Get the necessary views
-        boardViewOwn = (NetworkBoardView) findViewById(R.id.board_view_network_small);
-        boardViewOpponent = (NetworkBoardView) findViewById(R.id.board_view_network_big);
-
-        textCurrentPlayer = (TextView) findViewById(R.id.text_network_current_player);
-
-        switchSound = (Switch) findViewById(R.id.switch_network_sound);
-        switchSound.setChecked(isSoundEnabled);
-
-        if (savedInstanceState != null)
-            return;
-
+    public void restart(){
         Bundle extras = getIntent().getExtras();
-
         // Small BoardView
         // This is what the CPU will try to beat
         // It contains our deployment units
@@ -210,6 +189,28 @@ public class NetworkGameActivity extends AppCompatActivity implements Battleship
         });
 
         NetworkManager.registerNetworkInterface(this, this);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        setContentView(R.layout.activity_network_game);
+
+        // Get the necessary views
+        boardViewOwn = (NetworkBoardView) findViewById(R.id.board_view_network_small);
+        boardViewOpponent = (NetworkBoardView) findViewById(R.id.board_view_network_big);
+
+        textCurrentPlayer = (TextView) findViewById(R.id.text_network_current_player);
+
+        switchSound = (Switch) findViewById(R.id.switch_network_sound);
+        switchSound.setChecked(isSoundEnabled);
+
+        if (savedInstanceState != null)
+            return;
+
+        restart();
     }
 
 
@@ -313,9 +314,9 @@ public class NetworkGameActivity extends AppCompatActivity implements Battleship
         dialogExit.setMessage("Your opponent has requested a restart. Agree?");
         dialogExit.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-            onCreate(restartBundle);
             PacketRequestResponse response = new PacketRequestResponse(true);
             NetworkManager.sendPacket(response);
+            restart();
             }
         });
         dialogExit.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -375,18 +376,13 @@ public class NetworkGameActivity extends AppCompatActivity implements Battleship
     @Override
     public void onReceive(Packet p) {
         Log.d("Debug", "NetworkGameActivity received: " + p);
-        if(p instanceof PacketHit){
-            // They fired against us
-            //PacketHit packetHit = (PacketHit)p;
-            //boardOwn.hit(packetHit.X, packetHit.Y);
-        }
-        else if(p instanceof PacketRestartRequest){
+        if(p instanceof PacketRestartRequest){
             showDialogRequestResponse();
         }
         else if(p instanceof PacketRequestResponse){
             PacketRequestResponse response = (PacketRequestResponse)p;
             if(response.isAgreed) {
-                onCreate(restartBundle);
+                restart();
             }
         }
         else if(p instanceof PacketGameover){

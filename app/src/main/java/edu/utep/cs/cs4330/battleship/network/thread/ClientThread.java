@@ -4,6 +4,7 @@ package edu.utep.cs.cs4330.battleship.network.thread;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.os.Handler;
 import android.util.Log;
 
 import java.io.IOException;
@@ -28,12 +29,13 @@ public class ClientThread extends Thread {
 
     public void run() {
         Log.d("Debug", "ClientThread in run()");
-        bluetoothAdapter.cancelDiscovery();
         try {
             mmSocket.connect();
+            bluetoothAdapter.cancelDiscovery();
             Log.d("Debug", "ClientThread connected");
         } catch (IOException connectException) {
             try {
+                Log.d("Debug", "ClientThread is kill");
                 mmSocket.close();
             } catch (IOException closeException) {
                 Log.e(TAG, "Could not close the clients", closeException);

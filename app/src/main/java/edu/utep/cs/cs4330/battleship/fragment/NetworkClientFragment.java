@@ -157,7 +157,7 @@ public class NetworkClientFragment extends Fragment implements NetworkInterface 
                 // Discovery has found a device. Get the BluetoothDevice object and its info from the Intent.
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 String deviceName = device.getName();
-                if(deviceName != null && deviceName.contains("Jose")) {
+                if(deviceName != null) {
                     String deviceHardwareAddress = device.getAddress(); // MAC address
                     Log.d("Debug", "Name: " + deviceName + ", " + deviceHardwareAddress + " connected");
                     new ClientThread(device).start();
