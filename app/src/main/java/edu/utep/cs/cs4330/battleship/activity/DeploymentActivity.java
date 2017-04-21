@@ -137,6 +137,7 @@ public class DeploymentActivity extends AppCompatActivity implements DeploymentB
                 Intent i = new Intent(this, BluetoothSetupActivity.class);
                 i.putExtra("BOARD", boardViewDeployment.getBoard());
                 startActivity(i);
+                finish();
             }
         }
     }

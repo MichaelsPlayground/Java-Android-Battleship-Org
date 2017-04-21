@@ -34,10 +34,24 @@ public class ReceivingThread extends Thread {
         Log.d("Debug", "Input stream is null: " + (mmInStream == null));
     }
 
+    public void close(){
+        try{
+            mmInStream.close();
+        }
+        catch (IOException e){
+            Log.d("Debug", "ReceivingThread couldn't close");
+        }
+    }
+
     @Override
     public void run() {
         // Keep listening to the InputStream until an exception occurs.
         while (true) {
+            if(!NetworkManager.isRunning){
+                close();
+                return;
+            }
+
             try {
                 // Read from the InputStream.
                 Packet packetInput = Packet.readPacket(mmInStream);

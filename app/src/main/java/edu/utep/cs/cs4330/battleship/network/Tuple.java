@@ -14,6 +14,9 @@ class Tuple {
 
     @Override
     public boolean equals(Object obj) {
+        if(obj == null)
+            return false;
+
         if (obj instanceof Tuple) {
             Tuple other = (Tuple) obj;
             return activity.equals(other.activity) && networkInterface.equals(other.networkInterface);

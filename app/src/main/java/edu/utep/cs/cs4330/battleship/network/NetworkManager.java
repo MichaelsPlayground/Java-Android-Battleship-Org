@@ -14,6 +14,7 @@ import edu.utep.cs.cs4330.battleship.network.packet.Packet;
 public class NetworkManager {
     private static final List<Tuple> networkInterfaceList = new ArrayList<>();
     public static final BlockingQueue<Packet> packetList = new ArrayBlockingQueue<Packet>(20);
+    public static boolean isRunning = false;
 
     public static synchronized void sendPacket(Packet p) {
         try {
@@ -31,6 +32,10 @@ public class NetworkManager {
 
     public static void unregisterNetworkInterface(Activity activity, NetworkInterface networkInterface) {
         networkInterfaceList.remove(new Tuple(activity, networkInterface));
+    }
+
+    public static void clearNetworkInterface(){
+        networkInterfaceList.clear();
     }
 
     public static void broadcastConnect() {

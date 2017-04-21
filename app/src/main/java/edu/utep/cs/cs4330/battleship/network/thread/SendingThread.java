@@ -27,6 +27,7 @@ public class SendingThread extends Thread {
 
         mmOutStream = tmpOut;
         NetworkManager.broadcastConnect();
+        NetworkManager.isRunning = true;
         Log.d("Debug", "Sending thread broadcasting connect to everyone");
     }
 
@@ -35,6 +36,11 @@ public class SendingThread extends Thread {
         while (true) {
             if(isClosed)
                 return;
+
+            if(!NetworkManager.isRunning){
+                close();
+                return;
+            }
 
             try {
                 Packet p = NetworkManager.packetList.take();
@@ -48,6 +54,16 @@ public class SendingThread extends Thread {
         }
     }
 
+    private void close(){
+        try{
+            isClosed = true;
+            mmOutStream.flush();
+            mmOutStream.close();
+        }
+        catch(IOException e){
+            Log.d("Debug", "Sending couldn't close");
+        }
+    }
 
 
     private void write(Packet p) {
