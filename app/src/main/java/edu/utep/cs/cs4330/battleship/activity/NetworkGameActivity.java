@@ -349,7 +349,9 @@ public class NetworkGameActivity extends AppCompatActivity implements Battleship
         dialogGameover.setTitle(getString(R.string.game_gameover_title));
         dialogGameover.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                Intent i = new Intent(getApplication(), MainMenuActivity.class);
+                NetworkManager.clearNetworkInterface();
+                NetworkManager.isRunning = false;
+                Intent i = new Intent(NetworkGameActivity.this, MainMenuActivity.class);
                 startActivity(i);
                 finish();
             }
